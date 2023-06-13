@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Light Theme Colors -->
+    <color name="primary_color">#FFE396C3</color>
+    <color name="primary_dark">#FFC775A4</color>
+    <color name="primary_light">#FFFFC3D8</color>
+    <color name="color_on_primary">#000000</color>
+    <color name="complementary_color">#FF96E3B6</color>
+    <color name="complementary_dark">#FF63B88D</color>
+    <color name="complementary_light">#FFC5F3D8</color>
+
+    <!-- Dark Theme Colors -->
+    <color name="dark_primary_color">#FF4E244F</color>
+    <color name="dark_primary_dark">#FF371B38</color>
+    <color name="dark_primary_light">#FF6D3B6E</color>
+
+    <color name="dark_complementary_color">#FF6E8D5C</color>
+    <color name="dark_complementary_dark">#FF4B6A39</color>
+    <color name="dark_complementary_light">#FF9BD689</color>
+    <color name="color_on_secondary">#FFFFFF</color>
+
+</resources>
+

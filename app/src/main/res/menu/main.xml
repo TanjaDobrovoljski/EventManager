@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
+
+    <item
+        android:id="@+id/app_settings"
+        app:showAsAction="never"
+        android:orderInCategory="100"
+        android:title="Podešavanja"></item>
+
+    <item
+        android:id="@+id/about_app"
+        app:showAsAction="never"
+        android:orderInCategory="101"
+        android:title="O aplikaciji">
+
+    </item>
+</menu>
