@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigationGraph"
+    app:startDestination="@id/listFragment">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.example.eventmanager.ListFragment"
+        android:label="List Fragment"
+        layout="@layout/fragment_list"
+
+        />
+
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.example.eventmanager.CalendarFragment"
+        android:label="Calendar Fragment"
+       layout="@layout/fragment_calendar" />
+
+</navigation>
