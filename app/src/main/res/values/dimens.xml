@@ -4,10 +4,13 @@
     <dimen name="button_corner">18dp</dimen>
     <dimen name="button_padding">23dp</dimen>
     <dimen name="header_text">20sp</dimen>
-    <dimen name="border_width">7dp</dimen>
+    <dimen name="border_width">17dp</dimen>
     <dimen name="list_margin">10dp</dimen>
-    <dimen name="button_list_padding">15dp</dimen>
+    <dimen name="button_list_padding">10dp</dimen>
     <dimen name="child_text_size">23sp</dimen>
     <dimen name="margin_separator">10dp</dimen>
+    <dimen name="margin_list_separator">13dp</dimen>
     <dimen name="video_height">500dp</dimen>
+    <dimen name="list_corner">20dp</dimen>
+    <dimen name="list_width">7dp</dimen>
 </resources>

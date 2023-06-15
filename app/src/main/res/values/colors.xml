@@ -7,8 +7,15 @@
     <color name="primary_light">#FFFFC3D8</color>
     <color name="color_on_primary">#000000</color>
     <color name="complementary_color">#FF96E3B6</color>
+    <color name="complementary_color_transparention">#8096E3B6</color>
     <color name="complementary_dark">#FF63B88D</color>
     <color name="complementary_light">#FFC5F3D8</color>
+    <color name="primary_triadic_one">#fca998</color>
+    <color name="primary_triadic_two">#ecfc98</color>
+    <color name="primary_triadic_four">#db98fc</color>
+    <color name="primary_color_transparention">#80E396C3</color>
+    <color name="small_text_color">#414141</color>
+
 
     <!-- Dark Theme Colors -->
     <color name="dark_primary_color">#FF4E244F</color>

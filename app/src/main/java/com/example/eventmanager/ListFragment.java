@@ -1,11 +1,15 @@
 package com.example.eventmanager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
@@ -24,18 +28,41 @@ public class ListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         activityList = new ArrayList<>();
 
-        // Create and add Activity objects to the list
-        Activity activity1 = new Activity("Work", "9:00 AM - 5:00 PM", "Office work", "Company HQ");
-        Activity activity2 = new Activity("Leisure", "6:00 PM - 8:00 PM", "Watch a movie", "Local cinema");
-        Activity activity3 = new Activity("Travel", "10:00 AM - 6:00 PM", "Visit a tourist attraction", "City center");
+
+        Activity activity1 = new Activity("Work", "9:00 AM - 5:00 PM", "Office work", "Company HQ","31/12/2023");
+        Activity activity2 = new Activity("Leisure", "6:00 PM - 8:00 PM", "Watch a movie", "Local cinema","03/07/2023");
+        Activity activity3 = new Activity("Travel", "10:00 AM - 6:00 PM", "Visit a tourist attraction", "City center","15/02/2024");
 
         activityList.add(activity1);
         activityList.add(activity2);
         activityList.add(activity3);
 
-        // Add your logic to populate the activityList with data
+
         activityAdapter = new ActivityAdapter(activityList);
+        /*activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Activity activity) {
+                Toast.makeText(getContext(), "Kliknuli ste na: " + activity.getName(), Toast.LENGTH_LONG).show();
+            }
+        });*/
+       activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Activity activity) {
+                // Open NewsArticleFragment on item click
+                ActivityDetails detailsArticleFragment = new ActivityDetails();
+                Bundle bundle = new Bundle();
+
+                bundle.putParcelable("activity", activity);
+                detailsArticleFragment.setArguments(bundle);
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, detailsArticleFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         recyclerView.setAdapter(activityAdapter);
         return view;
     }
+
 }

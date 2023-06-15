@@ -8,12 +8,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class WelcomeActivity extends AppCompatActivity {
 
     BottomNavigationView navigationView;
+    FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +25,41 @@ public class WelcomeActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle(getString(R.string.app_name));
         navigateToListFragment();
+        fab=findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(WelcomeActivity.this, fab);
+                popupMenu.getMenuInflater().inflate(R.menu.fab_main, popupMenu.getMenu());
+
+                // Set a click listener on the popup menu items
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        // Handle menu item click events here
+                        switch (menuItem.getItemId()) {
+                            case R.id.freeTime:
+                                openAddNewActivityWithFragment(1);
+                                return true;
+                            case R.id.work:
+                                openAddNewActivityWithFragment(2);
+                                return true;
+                            case R.id.travel:
+                                openAddNewActivityWithFragment(3);
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+
+                // Show the popup menu
+                popupMenu.show();
+            }
+        });
+
+
         navigationView=findViewById(R.id.navigationView);
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -40,6 +79,11 @@ public class WelcomeActivity extends AppCompatActivity {
         });
     }
 
+    private void openAddNewActivityWithFragment(int fragmentId) {
+        Intent intent = new Intent(WelcomeActivity.this, AddNewActivity.class);
+        intent.putExtra("fragmentId", fragmentId);
+        startActivity(intent);
+    }
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.main,menu);
