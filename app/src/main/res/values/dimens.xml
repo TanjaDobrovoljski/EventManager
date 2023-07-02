@@ -13,4 +13,6 @@
     <dimen name="video_height">500dp</dimen>
     <dimen name="list_corner">20dp</dimen>
     <dimen name="list_width">7dp</dimen>
+    <dimen name="image_dim">100dp</dimen>
+
 </resources>
