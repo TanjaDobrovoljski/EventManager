@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
@@ -31,6 +32,19 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import com.squareup.picasso.Picasso;
+import java.io.IOException;
+import java.net.URLEncoder;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -52,6 +66,9 @@ public class FreeTimeFragment extends Fragment {
     private static final int GALLERY_REQ_CODE = 2;
     private int currentImage;
 
+    private static final String API_KEY = "QWbBcpE6Sb1dsPpWTIt29e7puN3daasrXHBIucDx0qEGdgwxJijP5Mrl"; //6d2c8722de764a277fe0e1de101e296e
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_free_time, container, false);
@@ -67,7 +84,7 @@ public class FreeTimeFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Select Image Source");
-                builder.setItems(new CharSequence[]{"Gallery", "Camera"}, new DialogInterface.OnClickListener() {
+                builder.setItems(new CharSequence[]{"Gallery", "Camera","Internet"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
@@ -76,7 +93,7 @@ public class FreeTimeFragment extends Fragment {
                             currentImage = 1;
                             galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(galleryIntent, GALLERY_REQ_CODE);
-                        } else {
+                        } else if(which==1){
                             // Open camera
 
                             if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -90,6 +107,10 @@ public class FreeTimeFragment extends Fragment {
                             }
 
                         }
+                        else {
+                            currentImage=1;
+                            buildImageUrl("dog");
+                        }
                     }
                 });
                 builder.show();
@@ -102,7 +123,7 @@ public class FreeTimeFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Select Image Source");
-                builder.setItems(new CharSequence[]{"Gallery", "Camera"}, new DialogInterface.OnClickListener() {
+                builder.setItems(new CharSequence[]{"Gallery", "Camera","Internet"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
@@ -111,7 +132,7 @@ public class FreeTimeFragment extends Fragment {
                             currentImage = 2;
                             galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(galleryIntent, GALLERY_REQ_CODE);
-                        } else {
+                        } else if(which==1){
                             // Open camera
 
                             if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -124,6 +145,10 @@ public class FreeTimeFragment extends Fragment {
                                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.CAMERA}, CAMERA_REQ_CODE);
                             }
 
+                        }
+                        else {
+                            currentImage=2;
+                            buildImageUrl("dog");
                         }
                     }
                 });
@@ -334,7 +359,93 @@ public class FreeTimeFragment extends Fragment {
             }
         }
     }
+    private void buildImageUrl(String sightName) {
+        new AsyncTask<String, Void, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    String sightName = params[0];
+                    String encodedSightName = URLEncoder.encode(sightName, "UTF-8");
 
+                    // Construct the API URL with the sight name parameter
+                    String apiUrl = "https://api.pexels.com/v1/search?query=" + encodedSightName + "&per_page=2";
+
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(apiUrl)
+                            .addHeader("Authorization", API_KEY)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    String json = response.body().string();
+
+                    // Parse the JSON response
+                    return parseImageUrlFromResponse(json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String imageUrl) {
+                if (imageUrl != null) {
+                    loadImageFromUrl(imageUrl);
+                } else {
+                    // Handle the error case
+                }
+            }
+        }.execute(sightName);
+    }
+
+
+    private int flag=0;
+    private String parseImageUrlFromResponse(String responseJson) throws JSONException {
+        JSONObject responseObj = new JSONObject(responseJson);
+        JSONArray photosArray = responseObj.getJSONArray("photos");
+
+        if(flag==0)
+            flag=1;
+        else if(flag==1)
+            flag=0;
+        if (photosArray.length() > 0) {
+            JSONObject photoObj = photosArray.getJSONObject(flag);
+            JSONObject srcObj = photoObj.getJSONObject("src");
+            String imageUrl = srcObj.getString("large");
+
+            return imageUrl;
+        }
+
+        return null;
+    }
+
+
+    private void loadImageFromUrl(String imageUrl) {
+        if (imageUrl != null) {
+            if(currentImage==1) {
+                Picasso.get()
+                        .load(imageUrl)
+                        .resize(image1.getWidth(), image1.getHeight())
+                        .centerCrop()
+                        .error(R.drawable.error_image)
+                        .into(image1);
+            }
+            else if(currentImage==2)
+            {
+                Picasso.get()
+                        .load(imageUrl)
+                        .resize(image2.getWidth(), image2.getHeight())
+                        .centerCrop()
+                        .error(R.drawable.error_image)
+                        .into(image2);
+            }
+        } else {
+            // Handle the case where imageUrl is null or invalid
+        }
+    }
 
 
 
