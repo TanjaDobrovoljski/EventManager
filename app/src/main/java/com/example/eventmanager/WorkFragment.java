@@ -1,4 +1,5 @@
 package com.example.eventmanager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 
@@ -26,14 +27,26 @@ public class WorkFragment extends Fragment {
 
     private EditText nameEditText;
 
+    DBHelper dbHelper;
     private CalendarView calendarView;
     private EditText descriptionEditText;
     private EditText locationEditText;
-    String selectedDate;
+    private Bitmap imageBitMap1,imageBitMap2;
     private Spinner hourSpinner;
     private Spinner minuteSpinner;
-    String selectedTime;
+
     private Button buttonAdd;
+    private String name= "";
+    private String selectedDate="";
+    private String selectedTime="";
+    private String description= "";
+    private String location= "";
+    private String selectedHour = "";
+    private String selectedMinute = "";
+
+    public WorkFragment(DBHelper dbHelper) {
+        this.dbHelper=dbHelper;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +62,12 @@ public class WorkFragment extends Fragment {
 
                                              if(!isFormValid())
                                                  Toast.makeText(view.getContext(), "Niste popunili sva polja!", Toast.LENGTH_SHORT).show();
+                                             else {
+                                                 if (dbHelper.insertUser("FREE", name, selectedTime, description, location, selectedDate,imageBitMap1,imageBitMap2)) {
+                                                     Toast.makeText(view.getContext(), "Uspijesno dodana aktivnost!", Toast.LENGTH_SHORT).show();
+
+                                                 }
+                                             }
                                          }
                                      }
         );
@@ -177,13 +196,13 @@ public class WorkFragment extends Fragment {
     }
 
     public boolean isFormValid() {
-        String name = nameEditText.getText().toString().trim();
+         name = nameEditText.getText().toString().trim();
 
 
-        String description = descriptionEditText.getText().toString().trim();
-        String location = locationEditText.getText().toString().trim();
-        String selectedHour = "";
-        String selectedMinute = "";
+         description = descriptionEditText.getText().toString().trim();
+         location = locationEditText.getText().toString().trim();
+         selectedHour = "";
+         selectedMinute = "";
         if (hourSpinner.getSelectedItem() != null) {
             selectedHour = hourSpinner.getSelectedItem().toString();
             selectedTime = selectedHour + ":";

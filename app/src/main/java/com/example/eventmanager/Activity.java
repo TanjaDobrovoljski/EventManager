@@ -1,5 +1,6 @@
 package com.example.eventmanager;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,6 +13,7 @@ public class Activity implements Parcelable {
     private String city;
     private String date;
     private String type;
+    private Bitmap image1,image2;
 
     public Activity(String type,String name, String time, String description,String city,String date) {
         this.id=uniqueId++;
@@ -30,6 +32,18 @@ public class Activity implements Parcelable {
         this.description = description;
         this.city = city;
         this.date=date;
+    }
+
+    public Activity(int id,String type,String name, String time, String description,String city,String date,Bitmap image1,Bitmap image2) {
+        this.id=id;
+        this.type=type;
+        this.name = name;
+        this.time = time;
+        this.description = description;
+        this.city = city;
+        this.date=date;
+        this.image1=image1;
+        this.image2=image2;
     }
 
     protected Activity(Parcel in) {

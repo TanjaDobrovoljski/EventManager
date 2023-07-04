@@ -17,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class WelcomeActivity extends AppCompatActivity {
 
     BottomNavigationView navigationView;
+    DBHelper dbHelper=new DBHelper(this);
     FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private void openAddNewActivityWithFragment(int fragmentId) {
         Intent intent = new Intent(WelcomeActivity.this, AddNewActivity.class);
         intent.putExtra("fragmentId", fragmentId);
+
         startActivity(intent);
     }
     public boolean onCreateOptionsMenu(Menu menu)
@@ -93,7 +95,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
     private void navigateToListFragment() {
-        ListFragment listFragment = new ListFragment();
+        ListFragment listFragment = new ListFragment(dbHelper);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment, listFragment)
                 .commit();

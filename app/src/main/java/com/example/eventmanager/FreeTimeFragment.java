@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -39,7 +41,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.net.URLEncoder;
@@ -67,9 +71,11 @@ public class FreeTimeFragment extends Fragment {
 
     private Button buttonAdd;
     private ImageView image1,image2;
+    private Bitmap imageBitMap1,imageBitMap2;
     private static final int CAMERA_REQ_CODE = 1;
     private static final int GALLERY_REQ_CODE = 2;
     private int currentImage;
+    private AutoCompleteTextView locationAutoCompleteTextView;
     DBHelper dbHelper;
     private String name= "";
     private String selectedDate="";
@@ -78,6 +84,7 @@ public class FreeTimeFragment extends Fragment {
     private String location= "";
     private String selectedHour = "";
     private String selectedMinute = "";
+
 
     private static final String API_KEY = "QWbBcpE6Sb1dsPpWTIt29e7puN3daasrXHBIucDx0qEGdgwxJijP5Mrl"; //6d2c8722de764a277fe0e1de101e296e
 
@@ -109,6 +116,7 @@ public class FreeTimeFragment extends Fragment {
                             Intent galleryIntent = new Intent(Intent.ACTION_PICK);
                             currentImage = 1;
                             galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
                             startActivityForResult(galleryIntent, GALLERY_REQ_CODE);
                         } else if(which==1){
                             // Open camera
@@ -179,11 +187,15 @@ public class FreeTimeFragment extends Fragment {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-
+               int i;
                if(!isFormValid())
                    Toast.makeText(view.getContext(), "Niste popunili sva polja!", Toast.LENGTH_SHORT).show();
                else {
-                   dbHelper.insertUser("FREE",name,selectedTime,description,location,selectedDate);
+
+                  if( dbHelper.insertUser("FREE",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2)) {
+                      Toast.makeText(view.getContext(), "Uspijesno dodana aktivnost!", Toast.LENGTH_SHORT).show();
+
+                  }
                }
            }
        }
@@ -238,7 +250,7 @@ public class FreeTimeFragment extends Fragment {
         });
 
         descriptionEditText = view.findViewById(R.id.descriptionEditText);
-        AutoCompleteTextView locationAutoCompleteTextView = view.findViewById(R.id.locationAutoCompleteTextView);
+         locationAutoCompleteTextView = view.findViewById(R.id.locationAutoCompleteTextView);
 
         City c1=new City("London",51.509865,-0.118092);
         City c2=new City("Banja Luka",44.772182,17.191000);
@@ -322,7 +334,7 @@ public class FreeTimeFragment extends Fragment {
 
        
          description = descriptionEditText.getText().toString().trim();
-         location = locationEditText.getText().toString().trim();
+         location =  locationAutoCompleteTextView.getText().toString().trim();
          selectedHour = "";
          selectedMinute = "";
         if (hourSpinner.getSelectedItem() != null) {
@@ -372,23 +384,40 @@ public class FreeTimeFragment extends Fragment {
             if (requestCode == GALLERY_REQ_CODE) {
                 Uri selectedImageUri = data.getData();
 
+
                 if (selectedImageUri != null) {
-                    // Check which image is being added
+
                     if (currentImage == 1) {
-                        image1.setImageURI(selectedImageUri);
+                        try {
+                            // Retrieve the selected image as a Bitmap
+                            imageBitMap1 = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImageUri);
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        image1.setImageBitmap(imageBitMap1);
                     } else if (currentImage == 2) {
-                        image2.setImageURI(selectedImageUri);
+                        try {
+                            // Retrieve the selected image as a Bitmap
+                            imageBitMap2 = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImageUri);
+
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        image2.setImageBitmap(imageBitMap2);
                     }
                 }
             } else if (requestCode == CAMERA_REQ_CODE) {
                 // Get the captured image from the intent data
                 Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
+
 
                 if (currentImage == 1) {
-                    image1.setImageBitmap(imageBitmap);
+                   imageBitMap1 = (Bitmap) extras.get("data");
+                    image1.setImageBitmap(imageBitMap1);
                 } else if (currentImage == 2) {
-                    image2.setImageBitmap(imageBitmap);
+                    imageBitMap2 = (Bitmap) extras.get("data");
+                    image2.setImageBitmap(imageBitMap2);
                 }
             }
         }
@@ -459,28 +488,68 @@ public class FreeTimeFragment extends Fragment {
 
     private void loadImageFromUrl(String imageUrl) {
         if (imageUrl != null) {
-            if(currentImage==1) {
+            if (currentImage == 1) {
                 Picasso.get()
                         .load(imageUrl)
                         .resize(image1.getWidth(), image1.getHeight())
                         .centerCrop()
                         .error(R.drawable.error_image)
-                        .into(image1);
-            }
-            else if(currentImage==2)
-            {
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                               imageBitMap1=bitmap;
+                                image1.setImageBitmap(bitmap);
+
+                                // Pass the bitmap to your insertUser method
+                               }
+
+                            @Override
+                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                            }
+
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                // Called before the image is loaded, you can show a placeholder here
+                            }
+                        });
+            } else if (currentImage == 2) {
                 Picasso.get()
                         .load(imageUrl)
                         .resize(image2.getWidth(), image2.getHeight())
                         .centerCrop()
                         .error(R.drawable.error_image)
-                        .into(image2);
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                imageBitMap2=bitmap;
+                                image2.setImageBitmap(bitmap);
+
+                                // Pass the bitmap to your insertUser method
+                                  }
+
+                            @Override
+                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                                // Handle the case where loading the bitmap failed
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                // Called before the image is loaded, you can show a placeholder here
+                            }
+                        });
             }
         } else {
             // Handle the case where imageUrl is null or invalid
         }
     }
 
+
+    public void handleBackPressed() {
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        fragmentManager.popBackStack();
+    }
 
 
 }

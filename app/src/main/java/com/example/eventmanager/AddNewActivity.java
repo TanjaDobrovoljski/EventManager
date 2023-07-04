@@ -11,7 +11,10 @@ import android.text.Spanned;
 
 public class AddNewActivity extends AppCompatActivity {
 
-    DBHelper dbHelper = new DBHelper(this);
+    private DBHelper dbHelper;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +24,7 @@ public class AddNewActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         int fragmentId = getIntent().getIntExtra("fragmentId", 0);
-
+        dbHelper=new DBHelper(this);
         // Determine which fragment to display based on the fragment ID
         Fragment fragment = null;
         switch (fragmentId) {
@@ -29,10 +32,10 @@ public class AddNewActivity extends AppCompatActivity {
                 fragment = new FreeTimeFragment(dbHelper);
                 break;
             case 2:
-               fragment=new WorkFragment();
+              // fragment=new WorkFragment(dbHelper);
                 break;
             case 3:
-               fragment=new TravelFragment();
+              // fragment=new TravelFragment(dbHelper);
                 break;
             default:
                 // Default to a fallback fragment or handle the case as desired

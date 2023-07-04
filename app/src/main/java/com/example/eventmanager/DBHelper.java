@@ -1,6 +1,7 @@
 package com.example.eventmanager;
 
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,6 +12,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,6 +28,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ACTIVITY_COLUMN_DESCRIPTION = "description";
     public static final String ACTIVITY_COLUMN_LOCATION = "location";
     public static final String ACTIVITY_COLUMN_DATE = "date";
+    public static final String ACTIVITY_COLUMN_IMAGE1 = "image1";
+    public static final String ACTIVITY_COLUMN_IMAGE2 = "image2";
 
 
     private HashMap hp;
@@ -41,7 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(
                 "create table "+ACTIVITY_TABLE_NAME +
-                        " (id integer primary key,type text,name text,time text,description text, city text,date text)"
+                        " (id integer primary key,type text,name text,time text,description text, city text,date text,image1 blob,image2 blob)"
         );
     }
 
@@ -51,7 +56,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertUser(String type,String name, String time, String description,String city,String date) {
+    public boolean insertUser(String type,String name, String time, String description,String city,String date,Bitmap image1, Bitmap image2) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("type", type);
@@ -60,9 +65,29 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("description", description);
         contentValues.put("city", city);
         contentValues.put("date", date);
+        if (image1 != null) {
+            byte[] image1ByteArray = getBitmapAsByteArray(image1);
+            contentValues.put("image1", image1ByteArray);
+        } else {
+            contentValues.put("image1", new byte[0]);
+        }
+
+        // Convert image2 Bitmap to byte array and insert into the database
+        if (image2 != null) {
+            byte[] image2ByteArray = getBitmapAsByteArray(image2);
+            contentValues.put("image2", image2ByteArray);
+        } else {
+            contentValues.put("image2", new byte[0]);
+        }
+
 
         db.insert(ACTIVITY_TABLE_NAME, null, contentValues);
         return true;
+    }
+    private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
     }
 
     public Cursor getData(int id) {
@@ -99,19 +124,40 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    public ArrayList<String> getAllUser() {
-        ArrayList<String> array_list = new ArrayList<String>();
-
+    public ArrayList<Activity> getAllActivities() {
+        ArrayList<Activity> activityList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from "+ ACTIVITY_TABLE_NAME, null );
-        res.moveToFirst();
 
-        while(res.isAfterLast() == false){
-            array_list.add(res.getString(res.getColumnIndex(ACTIVITY_COLUMN_NAME)));
-            res.moveToNext();
+        Cursor cursor = db.rawQuery("select * from "+ACTIVITY_TABLE_NAME, null);
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            String type = cursor.getString(cursor.getColumnIndex("type"));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            String time = cursor.getString(cursor.getColumnIndex("time"));
+            String description = cursor.getString(cursor.getColumnIndex("description"));
+            String city = cursor.getString(cursor.getColumnIndex("city"));
+            String date = cursor.getString(cursor.getColumnIndex("date"));
+
+            // Retrieve the image1 and image2 byte arrays
+            byte[] image1ByteArray = cursor.getBlob(cursor.getColumnIndex("image1"));
+            byte[] image2ByteArray = cursor.getBlob(cursor.getColumnIndex("image2"));
+
+            // Convert the byte arrays to Bitmaps
+            Bitmap image1 = BitmapFactory.decodeByteArray(image1ByteArray, 0, image1ByteArray.length);
+            Bitmap image2 = BitmapFactory.decodeByteArray(image2ByteArray, 0, image2ByteArray.length);
+
+            // Create an Activity object and add it to the activityList
+            Activity activity = new Activity(id,type, name, time, description, city, date, image1, image2);
+            activityList.add(activity);
         }
-        return array_list;
+
+        cursor.close();
+        db.close();
+
+        return activityList;
     }
+
 
    /* @SuppressLint("Range")
     public ArrayList<Activity> getAllUsers() {
