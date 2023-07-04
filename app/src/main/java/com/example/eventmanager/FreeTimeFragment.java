@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -25,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -35,15 +37,18 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
+
 import java.net.URLEncoder;
 
-import okhttp3.Call;
-import okhttp3.Callback;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,17 +61,29 @@ public class FreeTimeFragment extends Fragment {
     private CalendarView calendarView;
     private EditText descriptionEditText;
     private EditText locationEditText;
-    String selectedDate;
+
     private Spinner hourSpinner;
     private Spinner minuteSpinner;
-    String selectedTime;
+
     private Button buttonAdd;
     private ImageView image1,image2;
     private static final int CAMERA_REQ_CODE = 1;
     private static final int GALLERY_REQ_CODE = 2;
     private int currentImage;
+    DBHelper dbHelper;
+    private String name= "";
+    private String selectedDate="";
+    private String selectedTime="";
+    private String description= "";
+    private String location= "";
+    private String selectedHour = "";
+    private String selectedMinute = "";
 
     private static final String API_KEY = "QWbBcpE6Sb1dsPpWTIt29e7puN3daasrXHBIucDx0qEGdgwxJijP5Mrl"; //6d2c8722de764a277fe0e1de101e296e
+
+    public FreeTimeFragment(DBHelper dbHelper) {
+        this.dbHelper=dbHelper;
+    }
 
 
     @Override
@@ -165,6 +182,9 @@ public class FreeTimeFragment extends Fragment {
 
                if(!isFormValid())
                    Toast.makeText(view.getContext(), "Niste popunili sva polja!", Toast.LENGTH_SHORT).show();
+               else {
+                   dbHelper.insertUser("FREE",name,selectedTime,description,location,selectedDate);
+               }
            }
        }
        );
@@ -218,10 +238,27 @@ public class FreeTimeFragment extends Fragment {
         });
 
         descriptionEditText = view.findViewById(R.id.descriptionEditText);
-        locationEditText = view.findViewById(R.id.locationEditText);
+        AutoCompleteTextView locationAutoCompleteTextView = view.findViewById(R.id.locationAutoCompleteTextView);
+
+        City c1=new City("London",51.509865,-0.118092);
+        City c2=new City("Banja Luka",44.772182,17.191000);
+        City c3=new City("Belgrade",44.786568,20.448922);
+        City c4=new City("Zagreb",45.815011,15.981919);
+        City c5=new City("Paris",-6.889043,107.596066);
+        City c6=new City("Prague",50.075538,14.437800);
+        City c7=new City("Sarajevo",43.856430,18.413029);
+        City c8=new City("Rome",41.902782,12.496366);
+        City c9=new City("Madrid",40.416775,-3.703790);
+
+        String[] locations = {c1.getName(),c2.getName(),c3.getName(),c4.getName(),c5.getName(), c6.getName(), c7.getName(), c8.getName(),c9.getName()}; // Replace with your list of locations
+        ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, locations);
+        locationAutoCompleteTextView.setAdapter(locationAdapter);
+
 
         return view;
     }
+
+
 
     private void updateHourSpinner(boolean isToday) {
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -281,13 +318,13 @@ public class FreeTimeFragment extends Fragment {
     }
 
     public boolean isFormValid() {
-        String name = nameEditText.getText().toString().trim();
+         name = nameEditText.getText().toString().trim();
 
        
-        String description = descriptionEditText.getText().toString().trim();
-        String location = locationEditText.getText().toString().trim();
-        String selectedHour = "";
-        String selectedMinute = "";
+         description = descriptionEditText.getText().toString().trim();
+         location = locationEditText.getText().toString().trim();
+         selectedHour = "";
+         selectedMinute = "";
         if (hourSpinner.getSelectedItem() != null) {
             selectedHour = hourSpinner.getSelectedItem().toString();
             selectedTime = selectedHour + ":";
@@ -297,9 +334,6 @@ public class FreeTimeFragment extends Fragment {
             selectedMinute = minuteSpinner.getSelectedItem().toString();
             selectedTime+= selectedMinute;
         }
-
-
-
 
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime)
                 || TextUtils.isEmpty(description) || TextUtils.isEmpty(location)) {

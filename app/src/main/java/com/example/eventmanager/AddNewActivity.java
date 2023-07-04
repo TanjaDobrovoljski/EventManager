@@ -11,6 +11,7 @@ import android.text.Spanned;
 
 public class AddNewActivity extends AppCompatActivity {
 
+    DBHelper dbHelper = new DBHelper(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,13 +26,13 @@ public class AddNewActivity extends AppCompatActivity {
         Fragment fragment = null;
         switch (fragmentId) {
             case 1:
-                fragment = new FreeTimeFragment();
+                fragment = new FreeTimeFragment(dbHelper);
                 break;
             case 2:
-               // fragment = new Fragment2();
+               fragment=new WorkFragment();
                 break;
             case 3:
-               // fragment = new Fragment3();
+               fragment=new TravelFragment();
                 break;
             default:
                 // Default to a fallback fragment or handle the case as desired

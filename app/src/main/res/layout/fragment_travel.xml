@@ -62,29 +62,6 @@
         android:hint="Location" />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="@dimen/margin_separator"
-        android:layout_marginBottom="@dimen/margin_separator">
-
-        <ImageView
-            android:id="@+id/image1"
-            android:layout_width="@dimen/image_dim"
-            android:layout_height="@dimen/image_dim"
-            android:src="@drawable/image_holder"
-            android:layout_marginRight="@dimen/margin_separator"/>
-
-        <ImageView
-            android:id="@+id/image2"
-            android:layout_width="@dimen/image_dim"
-            android:layout_height="@dimen/image_dim"
-            android:src="@drawable/image_holder" />
-
-    </LinearLayout>
-
     <Button
         android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"
