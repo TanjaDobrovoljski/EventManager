@@ -84,6 +84,7 @@ public class FreeTimeFragment extends Fragment {
     private String location= "";
     private String selectedHour = "";
     private String selectedMinute = "";
+    private DBHelperCity dbHelperCity;
 
 
     private static final String API_KEY = "QWbBcpE6Sb1dsPpWTIt29e7puN3daasrXHBIucDx0qEGdgwxJijP5Mrl"; //6d2c8722de764a277fe0e1de101e296e
@@ -97,6 +98,7 @@ public class FreeTimeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_free_time, container, false);
 
+        dbHelperCity=new DBHelperCity(getContext());
         nameEditText = view.findViewById(R.id.nameEditText);
        buttonAdd=view.findViewById(R.id.buttonAdd);
        image1=view.findViewById(R.id.image1);
@@ -192,8 +194,11 @@ public class FreeTimeFragment extends Fragment {
                    Toast.makeText(view.getContext(), "Niste popunili sva polja!", Toast.LENGTH_SHORT).show();
                else {
 
-                  if( dbHelper.insertUser("FREE",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2)) {
+                  if( dbHelper.insertActivity("FREE",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2)) {
                       Toast.makeText(view.getContext(), "Uspijesno dodana aktivnost!", Toast.LENGTH_SHORT).show();
+                     if(view.getContext() instanceof AddNewActivity)
+                         ((AddNewActivity) view.getContext()).getActivityA().getListFragment().refreshList();
+                      goBackToPreviousActivity();
 
                   }
                }
@@ -252,6 +257,18 @@ public class FreeTimeFragment extends Fragment {
         descriptionEditText = view.findViewById(R.id.descriptionEditText);
          locationAutoCompleteTextView = view.findViewById(R.id.locationAutoCompleteTextView);
 
+
+
+        dbHelperCity.insertCity("London",51.509865,-0.118092);
+        dbHelperCity.insertCity("Banja Luka",44.772182,17.191000);
+        dbHelperCity.insertCity("Belgrade",44.786568,20.448922);
+        dbHelperCity.insertCity("Zagreb",45.815011,15.981919);
+        dbHelperCity.insertCity("Paris",-6.889043,107.596066);
+        dbHelperCity.insertCity("Prague",50.075538,14.437800);
+        dbHelperCity.insertCity("Sarajevo",43.856430,18.413029);
+        dbHelperCity.insertCity("Rome",41.902782,12.496366);
+        dbHelperCity.insertCity("Madrid",40.416775,-3.703790);
+
         City c1=new City("London",51.509865,-0.118092);
         City c2=new City("Banja Luka",44.772182,17.191000);
         City c3=new City("Belgrade",44.786568,20.448922);
@@ -261,6 +278,7 @@ public class FreeTimeFragment extends Fragment {
         City c7=new City("Sarajevo",43.856430,18.413029);
         City c8=new City("Rome",41.902782,12.496366);
         City c9=new City("Madrid",40.416775,-3.703790);
+
 
         String[] locations = {c1.getName(),c2.getName(),c3.getName(),c4.getName(),c5.getName(), c6.getName(), c7.getName(), c8.getName(),c9.getName()}; // Replace with your list of locations
         ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, locations);
@@ -546,9 +564,10 @@ public class FreeTimeFragment extends Fragment {
     }
 
 
-    public void handleBackPressed() {
-        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-        fragmentManager.popBackStack();
+    private void goBackToPreviousActivity() {
+        if (getActivity() != null) {
+            getActivity().onBackPressed();
+        }
     }
 
 

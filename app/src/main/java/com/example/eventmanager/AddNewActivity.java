@@ -8,12 +8,28 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.widget.Toast;
 
 public class AddNewActivity extends AppCompatActivity {
 
     private DBHelper dbHelper;
+    private   WelcomeActivity activityA;
 
+    public DBHelper getDbHelper() {
+        return dbHelper;
+    }
 
+    public void setDbHelper(DBHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
+
+    public WelcomeActivity getActivityA() {
+        return activityA;
+    }
+
+    public void setActivityA(WelcomeActivity activityA) {
+        this.activityA = activityA;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +38,7 @@ public class AddNewActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle("Dodavanje nove aktivnosti");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activityA = ActivityHolder.getActivityA();
 
         int fragmentId = getIntent().getIntExtra("fragmentId", 0);
         dbHelper=new DBHelper(this);
@@ -32,10 +49,10 @@ public class AddNewActivity extends AppCompatActivity {
                 fragment = new FreeTimeFragment(dbHelper);
                 break;
             case 2:
-              // fragment=new WorkFragment(dbHelper);
+               fragment=new WorkFragment(dbHelper);
                 break;
             case 3:
-              // fragment=new TravelFragment(dbHelper);
+               fragment=new TravelFragment(dbHelper);
                 break;
             default:
                 // Default to a fallback fragment or handle the case as desired
@@ -47,7 +64,7 @@ public class AddNewActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment, fragment)
                 .commit();
-    }
+         }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -57,4 +74,5 @@ public class AddNewActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -3,6 +3,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +21,7 @@ public class ListFragment extends Fragment {
     private DBHelper dbHelper;
 
     public ListFragment(DBHelper dbHelper) {
-        this.dbHelper=dbHelper;
+        this.dbHelper = dbHelper;
     }
 
     @Nullable
@@ -30,12 +31,8 @@ public class ListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.list_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-         activityList = dbHelper.getAllActivities();
-
-
-        activityAdapter = new ActivityAdapter(activityList);
-
+        activityList = dbHelper.getAllActivities();
+        activityAdapter = new ActivityAdapter(activityList,dbHelper);
 
         /*activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
             @Override
@@ -43,7 +40,7 @@ public class ListFragment extends Fragment {
                 Toast.makeText(getContext(), "Kliknuli ste na: " + activity.getName(), Toast.LENGTH_LONG).show();
             }
         });*/
-       activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
+        activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Activity activity) {
                 // Open NewsArticleFragment on item click
@@ -63,4 +60,10 @@ public class ListFragment extends Fragment {
         return view;
     }
 
+    public void refreshList()
+    {
+        activityList = dbHelper.getAllActivities();
+        activityAdapter = new ActivityAdapter(activityList,dbHelper);
+        recyclerView.setAdapter(activityAdapter);
+    }
 }

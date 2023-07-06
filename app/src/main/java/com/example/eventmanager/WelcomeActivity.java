@@ -14,20 +14,28 @@ import android.widget.PopupMenu;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends AppCompatActivity  {
 
     BottomNavigationView navigationView;
     DBHelper dbHelper=new DBHelper(this);
     FloatingActionButton fab;
+    private ListFragment listFragment;
+    private CalendarFragment calendarFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        dbHelper.deleteAll();
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle(getString(R.string.app_name));
+
+        ActivityHolder.setActivityA(this);
+
         navigateToListFragment();
         fab=findViewById(R.id.fab);
         FloatingActionButton fab = findViewById(R.id.fab);
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,26 +91,32 @@ public class WelcomeActivity extends AppCompatActivity {
     private void openAddNewActivityWithFragment(int fragmentId) {
         Intent intent = new Intent(WelcomeActivity.this, AddNewActivity.class);
         intent.putExtra("fragmentId", fragmentId);
-
         startActivity(intent);
     }
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.main,menu);
-
         return  true;
     }
 
 
-    private void navigateToListFragment() {
-        ListFragment listFragment = new ListFragment(dbHelper);
+    public void navigateToListFragment() {
+         listFragment = new ListFragment(dbHelper);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment, listFragment)
                 .commit();
     }
 
+    public ListFragment getListFragment() {
+        return listFragment;
+    }
+
+    public void setListFragment(ListFragment listFragment) {
+        this.listFragment = listFragment;
+    }
+
     private void navigateToCalendarFragment() {
-        CalendarFragment calendarFragment = new CalendarFragment();
+         calendarFragment = new CalendarFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment, calendarFragment)
                 .commit();

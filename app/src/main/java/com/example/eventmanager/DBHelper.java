@@ -56,7 +56,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertUser(String type,String name, String time, String description,String city,String date,Bitmap image1, Bitmap image2) {
+    public boolean insertActivity(String type,String name, String time, String description,String city,String date,Bitmap image1, Bitmap image2) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("type", type);
@@ -102,7 +102,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateUser (Integer id,String type, String name, String time, String description,City city,String date) {
+    public boolean updateActivity (Integer id,String type, String name, String time, String description,City city,String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
@@ -116,7 +116,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public Integer deleteUser (Integer id) {
+    public Integer deleteActivity (Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(ACTIVITY_TABLE_NAME,
                 "id = ? ",
@@ -158,6 +158,45 @@ public class DBHelper extends SQLiteOpenHelper {
         return activityList;
     }
 
+    @SuppressLint("Range")
+    public Activity getActivity(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ACTIVITY_TABLE_NAME + " WHERE id=?", new String[]{String.valueOf(id)});
+
+        Activity activity = null;
+
+        if (cursor.moveToFirst()) {
+            String type = cursor.getString(cursor.getColumnIndex("type"));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            String time = cursor.getString(cursor.getColumnIndex("time"));
+            String description = cursor.getString(cursor.getColumnIndex("description"));
+            String city = cursor.getString(cursor.getColumnIndex("city"));
+            String date = cursor.getString(cursor.getColumnIndex("date"));
+
+            // Retrieve the image1 and image2 byte arrays
+            byte[] image1ByteArray = cursor.getBlob(cursor.getColumnIndex("image1"));
+            byte[] image2ByteArray = cursor.getBlob(cursor.getColumnIndex("image2"));
+
+            // Convert the byte arrays to Bitmaps
+            Bitmap image1 = BitmapFactory.decodeByteArray(image1ByteArray, 0, image1ByteArray.length);
+            Bitmap image2 = BitmapFactory.decodeByteArray(image2ByteArray, 0, image2ByteArray.length);
+
+            // Create an Activity object
+            activity = new Activity(id, type, name, time, description, city, date, image1, image2);
+        }
+
+        cursor.close();
+        db.close();
+
+        return activity;
+    }
+
+    public void deleteAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(ACTIVITY_TABLE_NAME, null, null);
+        db.close();
+    }
 
    /* @SuppressLint("Range")
     public ArrayList<Activity> getAllUsers() {

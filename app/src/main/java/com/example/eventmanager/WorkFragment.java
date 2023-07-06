@@ -29,6 +29,7 @@ public class WorkFragment extends Fragment {
 
     DBHelper dbHelper;
     private CalendarView calendarView;
+    private AutoCompleteTextView locationAutoCompleteTextView;
     private EditText descriptionEditText;
     private EditText locationEditText;
     private Bitmap imageBitMap1,imageBitMap2;
@@ -63,11 +64,14 @@ public class WorkFragment extends Fragment {
                                              if(!isFormValid())
                                                  Toast.makeText(view.getContext(), "Niste popunili sva polja!", Toast.LENGTH_SHORT).show();
                                              else {
-                                                 if (dbHelper.insertUser("FREE", name, selectedTime, description, location, selectedDate,imageBitMap1,imageBitMap2)) {
+                                                 if( dbHelper.insertActivity("WORK",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2)) {
                                                      Toast.makeText(view.getContext(), "Uspijesno dodana aktivnost!", Toast.LENGTH_SHORT).show();
+                                                     if(view.getContext() instanceof AddNewActivity)
+                                                         ((AddNewActivity) view.getContext()).getActivityA().getListFragment().refreshList();
+                                                     goBackToPreviousActivity();
 
                                                  }
-                                             }
+                                                 }
                                          }
                                      }
         );
@@ -121,7 +125,8 @@ public class WorkFragment extends Fragment {
         });
 
         descriptionEditText = view.findViewById(R.id.descriptionEditText);
-        AutoCompleteTextView locationAutoCompleteTextView = view.findViewById(R.id.locationAutoCompleteTextView);
+        locationAutoCompleteTextView = view.findViewById(R.id.locationAutoCompleteTextView);
+
 
         City c1=new City("London",51.509865,-0.118092);
         City c2=new City("Banja Luka",44.772182,17.191000);
@@ -200,7 +205,7 @@ public class WorkFragment extends Fragment {
 
 
          description = descriptionEditText.getText().toString().trim();
-         location = locationEditText.getText().toString().trim();
+         location =locationAutoCompleteTextView.getText().toString().trim();
          selectedHour = "";
          selectedMinute = "";
         if (hourSpinner.getSelectedItem() != null) {
@@ -244,6 +249,10 @@ public class WorkFragment extends Fragment {
         return locationEditText.getText().toString().trim();
     }
 
-
+    private void goBackToPreviousActivity() {
+        if (getActivity() != null) {
+            getActivity().onBackPressed();
+        }
+    }
 
 }

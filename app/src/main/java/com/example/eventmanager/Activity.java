@@ -15,8 +15,17 @@ public class Activity implements Parcelable {
     private String type;
     private Bitmap image1,image2;
 
-    public Activity(String type,String name, String time, String description,String city,String date) {
-        this.id=uniqueId++;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Activity(String type, String name, String time, String description, String city, String date) {
+        this.id=uniqueId;
+        uniqueId++;
         this.type=type;
         this.name = name;
         this.time = time;
