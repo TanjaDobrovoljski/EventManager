@@ -19,8 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -194,7 +193,7 @@ public class FreeTimeFragment extends Fragment {
                    Toast.makeText(view.getContext(), "Niste popunili sva polja!", Toast.LENGTH_SHORT).show();
                else {
 
-                  if( dbHelper.insertActivity("FREE",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2)) {
+                  if( dbHelper.insertActivity("FREE",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2,ContextCompat.getColor(getContext(), R.color.primary_triadic_one))) {
                       Toast.makeText(view.getContext(), "Uspijesno dodana aktivnost!", Toast.LENGTH_SHORT).show();
                      if(view.getContext() instanceof AddNewActivity)
                          ((AddNewActivity) view.getContext()).getActivityA().getListFragment().refreshList();
@@ -259,15 +258,7 @@ public class FreeTimeFragment extends Fragment {
 
 
 
-        dbHelperCity.insertCity("London",51.509865,-0.118092);
-        dbHelperCity.insertCity("Banja Luka",44.772182,17.191000);
-        dbHelperCity.insertCity("Belgrade",44.786568,20.448922);
-        dbHelperCity.insertCity("Zagreb",45.815011,15.981919);
-        dbHelperCity.insertCity("Paris",-6.889043,107.596066);
-        dbHelperCity.insertCity("Prague",50.075538,14.437800);
-        dbHelperCity.insertCity("Sarajevo",43.856430,18.413029);
-        dbHelperCity.insertCity("Rome",41.902782,12.496366);
-        dbHelperCity.insertCity("Madrid",40.416775,-3.703790);
+
 
         City c1=new City("London",51.509865,-0.118092);
         City c2=new City("Banja Luka",44.772182,17.191000);
@@ -395,7 +386,7 @@ public class FreeTimeFragment extends Fragment {
 
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode,  Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {

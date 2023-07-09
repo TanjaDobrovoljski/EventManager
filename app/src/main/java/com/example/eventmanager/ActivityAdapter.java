@@ -20,6 +20,8 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
     private OnItemClickListener listener;
     private DBHelper dbHelper;
     private String type;
+    TextView nameTextView;
+
 
     Context context;
 
@@ -50,8 +52,27 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
     @Override
     public void onBindViewHolder(@NonNull ActivityViewHolder holder, int position) {
         Activity activity = activityList.get(position);
-        if(activity!=null )
-            type=dbHelper.getActivity(position+1).getType();
+        if(activity!=null ) {
+            type = dbHelper.getActivity(position + 1).getType();
+
+            int backgroundColor = 0;
+
+            if ("FREE".equals(type))
+                backgroundColor = ContextCompat.getColor(context, R.color.primary_triadic_one);
+            else if ("TRAVEL".equals(type))
+                backgroundColor = ContextCompat.getColor(context, R.color.primary_triadic_two);
+            else if ("WORK".equals(type))
+                backgroundColor = ContextCompat.getColor(context, R.color.primary_triadic_four);
+
+            activity.setColor(backgroundColor);
+            Drawable backgroundDrawable = nameTextView.getBackground();
+
+
+            if (backgroundDrawable instanceof GradientDrawable) {
+                GradientDrawable gradientDrawable = (GradientDrawable) backgroundDrawable;
+                gradientDrawable.setColor(backgroundColor);
+            }
+        }
         holder.bind(activity);
     }
 
@@ -61,7 +82,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
     }
 
      class ActivityViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
+
         TextView descriptionTextView;
         TextView timeTextView;
         TextView locationTextView;
@@ -69,25 +90,8 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
 
         ActivityViewHolder(@NonNull View itemView) {
             super(itemView);
+
             nameTextView = itemView.findViewById(R.id.nameTextView);
-
-            int backgroundColor = 0;
-            
-            if("FREE".equals(type))
-                backgroundColor = ContextCompat.getColor(context, R.color.primary_triadic_one);
-            else if ("TRAVEL".equals(type))
-                backgroundColor = ContextCompat.getColor(context, R.color.primary_triadic_two);
-            else if ("WORK".equals(type)) 
-                backgroundColor = ContextCompat.getColor(context, R.color.primary_triadic_four);
-                
-            Drawable backgroundDrawable = nameTextView.getBackground();
-
-
-            if (backgroundDrawable instanceof GradientDrawable) {
-                GradientDrawable gradientDrawable = (GradientDrawable) backgroundDrawable;
-                gradientDrawable.setColor(backgroundColor);
-            }
-
           //  descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
             timeTextView = itemView.findViewById(R.id.timeTextView);
             //locationTextView = itemView.findViewById(R.id.locationTextView);

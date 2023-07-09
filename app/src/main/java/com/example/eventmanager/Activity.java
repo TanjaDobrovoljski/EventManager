@@ -1,6 +1,7 @@
 package com.example.eventmanager;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,6 +14,32 @@ public class Activity implements Parcelable {
     private String city;
     private String date;
     private String type;
+    private int color;
+
+    public Bitmap getImage1() {
+        return image1;
+    }
+
+    public void setImage1(Bitmap image1) {
+        this.image1 = image1;
+    }
+
+    public Bitmap getImage2() {
+        return image2;
+    }
+
+    public void setImage2(Bitmap image2) {
+        this.image2 = image2;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     private Bitmap image1,image2;
 
     public String getType() {
@@ -43,7 +70,7 @@ public class Activity implements Parcelable {
         this.date=date;
     }
 
-    public Activity(int id,String type,String name, String time, String description,String city,String date,Bitmap image1,Bitmap image2) {
+    public Activity(int id,String type,String name, String time, String description,String city,String date,Bitmap image1,Bitmap image2,int color) {
         this.id=id;
         this.type=type;
         this.name = name;
@@ -53,6 +80,7 @@ public class Activity implements Parcelable {
         this.date=date;
         this.image1=image1;
         this.image2=image2;
+        this.color=color;
     }
 
     protected Activity(Parcel in) {

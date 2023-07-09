@@ -3,6 +3,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
@@ -64,7 +65,7 @@ public class TravelFragment extends Fragment {
                                              if(!isFormValid())
                                                  Toast.makeText(view.getContext(), "Niste popunili sva polja!", Toast.LENGTH_SHORT).show();
                                              else {
-                                                 if( dbHelper.insertActivity("TRAVEL",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2)) {
+                                                 if( dbHelper.insertActivity("TRAVEL",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2, ContextCompat.getColor(getContext(), R.color.primary_triadic_two))) {
                                                      Toast.makeText(view.getContext(), "Uspijesno dodana aktivnost!", Toast.LENGTH_SHORT).show();
                                                      if(view.getContext() instanceof AddNewActivity)
                                                          ((AddNewActivity) view.getContext()).getActivityA().getListFragment().refreshList();

@@ -121,6 +121,11 @@ public class DBHelperCity extends SQLiteOpenHelper {
 
         return cityList;
     }
+    public void deleteAllCities() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(CITY_TABLE_NAME, null, null);
+        db.close();
+    }
 
 
 }

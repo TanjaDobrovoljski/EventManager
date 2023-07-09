@@ -30,6 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ACTIVITY_COLUMN_DATE = "date";
     public static final String ACTIVITY_COLUMN_IMAGE1 = "image1";
     public static final String ACTIVITY_COLUMN_IMAGE2 = "image2";
+    public static final String ACTIVITY_COLUMN_COLOR = "color";
 
 
     private HashMap hp;
@@ -46,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL(
                 "create table "+ACTIVITY_TABLE_NAME +
-                        " (id integer primary key,type text,name text,time text,description text, city text,date text,image1 blob,image2 blob)"
+                        " (id integer primary key,type text,name text,time text,description text, city text,date text,image1 blob,image2 blob,color real)"
         );
     }
 
@@ -56,8 +57,13 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertActivity(String type,String name, String time, String description,String city,String date,Bitmap image1, Bitmap image2) {
+    public boolean insertActivity(String type,String name, String time, String description,String city,String date,Bitmap image1, Bitmap image2,int color) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        if (activityExists(name)) {
+            return false; // Object already exists, return false
+        }
+
         ContentValues contentValues = new ContentValues();
         contentValues.put("type", type);
         contentValues.put("name", name);
@@ -79,10 +85,20 @@ public class DBHelper extends SQLiteOpenHelper {
         } else {
             contentValues.put("image2", new byte[0]);
         }
-
+        contentValues.put("color", color);
 
         db.insert(ACTIVITY_TABLE_NAME, null, contentValues);
         return true;
+    }
+
+    private boolean activityExists(String name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + ACTIVITY_TABLE_NAME + " WHERE name = ?";
+        String[] selectionArgs = {name};
+        Cursor cursor = db.rawQuery(query, selectionArgs);
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        return exists;
     }
     private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -147,8 +163,9 @@ public class DBHelper extends SQLiteOpenHelper {
             Bitmap image1 = BitmapFactory.decodeByteArray(image1ByteArray, 0, image1ByteArray.length);
             Bitmap image2 = BitmapFactory.decodeByteArray(image2ByteArray, 0, image2ByteArray.length);
 
+            int color = cursor.getInt(cursor.getColumnIndex("color"));
             // Create an Activity object and add it to the activityList
-            Activity activity = new Activity(id,type, name, time, description, city, date, image1, image2);
+            Activity activity = new Activity(id,type, name, time, description, city, date, image1, image2,color);
             activityList.add(activity);
         }
 
@@ -182,8 +199,9 @@ public class DBHelper extends SQLiteOpenHelper {
             Bitmap image1 = BitmapFactory.decodeByteArray(image1ByteArray, 0, image1ByteArray.length);
             Bitmap image2 = BitmapFactory.decodeByteArray(image2ByteArray, 0, image2ByteArray.length);
 
+            int color = cursor.getInt(cursor.getColumnIndex("color"));
             // Create an Activity object
-            activity = new Activity(id, type, name, time, description, city, date, image1, image2);
+            activity = new Activity(id, type, name, time, description, city, date, image1, image2,color);
         }
 
         cursor.close();

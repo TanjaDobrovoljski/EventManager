@@ -18,6 +18,7 @@ public class WelcomeActivity extends AppCompatActivity  {
 
     BottomNavigationView navigationView;
     DBHelper dbHelper=new DBHelper(this);
+    DBHelperCity dbHelperCity=new DBHelperCity(this);
     FloatingActionButton fab;
     private ListFragment listFragment;
     private CalendarFragment calendarFragment;
@@ -25,7 +26,20 @@ public class WelcomeActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        dbHelper.deleteAll();
+
+      //dbHelper.deleteAll();
+        dbHelperCity.deleteAllCities();
+
+        dbHelperCity.insertCity("London",51.509865,-0.118092);
+        dbHelperCity.insertCity("Banja Luka",44.772182,17.191000);
+        dbHelperCity.insertCity("Belgrade",44.786568,20.448922);
+        dbHelperCity.insertCity("Zagreb",45.815011,15.981919);
+        dbHelperCity.insertCity("Paris",-6.889043,107.596066);
+        dbHelperCity.insertCity("Prague",50.075538,14.437800);
+        dbHelperCity.insertCity("Sarajevo",43.856430,18.413029);
+        dbHelperCity.insertCity("Rome",41.902782,12.496366);
+        dbHelperCity.insertCity("Madrid",40.416775,-3.703790);
+
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle(getString(R.string.app_name));
 
@@ -116,7 +130,7 @@ public class WelcomeActivity extends AppCompatActivity  {
     }
 
     private void navigateToCalendarFragment() {
-         calendarFragment = new CalendarFragment();
+         calendarFragment = new CalendarFragment(dbHelper);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment, calendarFragment)
                 .commit();
