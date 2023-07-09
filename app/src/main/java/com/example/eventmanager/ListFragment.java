@@ -31,7 +31,7 @@ public class ListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.list_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        activityList = dbHelper.getAllActivities();
+        activityList = dbHelper.getAllActivitiesSortedByDate();
         activityAdapter = new ActivityAdapter(activityList,dbHelper);
 
         /*activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
@@ -62,7 +62,7 @@ public class ListFragment extends Fragment {
 
     public void refreshList()
     {
-        activityList = dbHelper.getAllActivities();
+        activityList = dbHelper.getAllActivitiesSortedByDate();
         activityAdapter = new ActivityAdapter(activityList,dbHelper);
         recyclerView.setAdapter(activityAdapter);
     }

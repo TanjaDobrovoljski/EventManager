@@ -30,6 +30,8 @@ public class WelcomeActivity extends AppCompatActivity  {
       //dbHelper.deleteAll();
         dbHelperCity.deleteAllCities();
 
+       // dbHelper.insertActivity("nesto","nesto,","nesto","nesto","nesto","nesto",null,null,4362784);
+
         dbHelperCity.insertCity("London",51.509865,-0.118092);
         dbHelperCity.insertCity("Banja Luka",44.772182,17.191000);
         dbHelperCity.insertCity("Belgrade",44.786568,20.448922);

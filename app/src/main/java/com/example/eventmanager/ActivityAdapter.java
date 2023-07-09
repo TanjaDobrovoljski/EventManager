@@ -53,7 +53,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
     public void onBindViewHolder(@NonNull ActivityViewHolder holder, int position) {
         Activity activity = activityList.get(position);
         if(activity!=null ) {
-            type = dbHelper.getActivity(position + 1).getType();
+            type = activity.getType();
 
             int backgroundColor = 0;
 

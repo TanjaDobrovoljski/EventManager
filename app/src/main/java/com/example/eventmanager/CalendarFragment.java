@@ -36,6 +36,7 @@ public class CalendarFragment extends Fragment {
         calendarView = view.findViewById(R.id.calendarView);
 
 
+
         List<Activity> activities = dbHelper.getAllActivities();
         // Add your logic to update the UI with the activities for the selected date
 

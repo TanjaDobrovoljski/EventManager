@@ -2,7 +2,12 @@ package com.example.eventmanager;
 
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
@@ -20,6 +25,8 @@ import android.widget.Toast;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "activities";
+    private static final String TEMP_TABLE_NAME = "temp_activities";
+
     public static final String ACTIVITY_TABLE_NAME = "activity";
     public static final String ACTIVITY_COLUMN_ID = "id";
     public static final String ACTIVITY_COLUMN_TYPE = "type";
@@ -88,8 +95,28 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("color", color);
 
         db.insert(ACTIVITY_TABLE_NAME, null, contentValues);
+      //  sortActivitiesByDate();
         return true;
     }
+
+   /* private void sortActivitiesByDate() {
+        Collections.sort(activityList, new Comparator<Activity>() {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            @Override
+            public int compare(Activity activity1, Activity activity2) {
+                try {
+                    Date date1 = dateFormat.parse(activity1.getDate());
+                    Date date2 = dateFormat.parse(activity2.getDate());
+                    return date1.compareTo(date2);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+        });
+    }
+*/
 
     private boolean activityExists(String name) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -146,7 +173,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery("select * from "+ACTIVITY_TABLE_NAME, null);
 
-        while (cursor.moveToNext()) {
+        if (cursor.moveToFirst()) {
+            do {
             int id = cursor.getInt(cursor.getColumnIndex("id"));
             String type = cursor.getString(cursor.getColumnIndex("type"));
             String name = cursor.getString(cursor.getColumnIndex("name"));
@@ -167,6 +195,45 @@ public class DBHelper extends SQLiteOpenHelper {
             // Create an Activity object and add it to the activityList
             Activity activity = new Activity(id,type, name, time, description, city, date, image1, image2,color);
             activityList.add(activity);
+        } while (cursor.moveToNext());
+    }
+        cursor.close();
+        db.close();
+
+        return activityList;
+    }
+    @SuppressLint("Range")
+    public ArrayList<Activity> getAllActivitiesSortedByDate() {
+        ArrayList<Activity> activityList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ACTIVITY_TABLE_NAME + " ORDER BY date ASC", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+            // Retrieve activity details from the cursor
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            String type = cursor.getString(cursor.getColumnIndex("type"));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            String time = cursor.getString(cursor.getColumnIndex("time"));
+            String description = cursor.getString(cursor.getColumnIndex("description"));
+            String city = cursor.getString(cursor.getColumnIndex("city"));
+            String date = cursor.getString(cursor.getColumnIndex("date"));
+
+            // Retrieve the image1 and image2 byte arrays
+            byte[] image1ByteArray = cursor.getBlob(cursor.getColumnIndex("image1"));
+            byte[] image2ByteArray = cursor.getBlob(cursor.getColumnIndex("image2"));
+
+            // Convert the byte arrays to Bitmaps
+            Bitmap image1 = BitmapFactory.decodeByteArray(image1ByteArray, 0, image1ByteArray.length);
+            Bitmap image2 = BitmapFactory.decodeByteArray(image2ByteArray, 0, image2ByteArray.length);
+
+            int color = cursor.getInt(cursor.getColumnIndex("color"));
+
+            // Create an Activity object and add it to the activityList
+            Activity activity = new Activity(id, type, name, time, description, city, date, image1, image2, color);
+            activityList.add(activity);
+            } while (cursor.moveToNext());
         }
 
         cursor.close();
@@ -174,6 +241,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return activityList;
     }
+
 
     @SuppressLint("Range")
     public Activity getActivity(int id) {
