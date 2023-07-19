@@ -8,21 +8,25 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.TransitionRes;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ActivityDetails extends Fragment {
+public class ActivityDetails extends Fragment implements OnMapReadyCallback {
 
     private String name= "";
     private String date="";
     private String time="";
     private String description= "";
+   // static final LatLng Your_Location = new LatLng(23.81, 90.41); //Your LatLong
+    private GoogleMap mMap;
     private String location= "";
 
     DBHelperCity dbHelperCity;
@@ -45,7 +49,12 @@ public class ActivityDetails extends Fragment {
                  descriptionTextView = view.findViewById(R.id.description);
                  dateActivity=view.findViewById(R.id.dateActivity);
                  timeActivity=view.findViewById(R.id.timeActivity);
-                 mapView=view.findViewById(R.id.mapView);
+                 if("TRAVEL".equals(activity.getType())) {
+                     mapView = view.findViewById(R.id.mapView);
+                     mapView.onCreate(savedInstanceState);
+                     mapView.getMapAsync(this);
+                 }
+
 
 
                 // Set other text views with the respective details
@@ -62,14 +71,39 @@ public class ActivityDetails extends Fragment {
         return view;
     }
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            LatLng city = dbHelperCity.getCoordinates(location);
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
-            googleMap.addMarker(new MarkerOptions().position(city).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(city));
-        }
-    };
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+       // mMap=googleMap;
+        LatLng sydney = new LatLng(100, -32);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+
 }

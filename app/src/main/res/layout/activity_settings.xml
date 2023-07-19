@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity"
+    android:orientation="vertical"
+    android:background="@drawable/background">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary_color"
+        android:theme="@style/CustomToolbarStyle"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:layout_marginBottom="@dimen/margin_separator" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:id="@+id/languageSpinner"
+        style="@style/CustomListItemStyle"
+        android:layout_marginBottom="@dimen/margin_separator" />
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/notificationSwitch"
+        android:layout_below="@+id/cachingSwitch"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="Notifications"
+        style="@style/CustomListItemStyle"
+        android:layout_marginBottom="@dimen/margin_separator" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/notificationDropdown"
+        android:entries="@array/notification_options"
+        android:visibility="gone"
+        style="@style/CustomListItemStyle"
+        android:layout_marginBottom="@dimen/margin_separator" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+</LinearLayout>

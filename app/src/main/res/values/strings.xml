@@ -2,4 +2,18 @@
     <string name="app_name">Planer</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_app_segment">Introducing Activity Planner, the ultimate Android app for organizing and planning your activities effortlessly.\n\nStay organized with essential activity details, including name, time, description, and location.\n\nEnhance your free time activities by uploading, capturing, or downloading multiple images directly from your device.\n\nFor travel activities, easily view the location on a map to get a precise idea of the city or area.\n\nEffortlessly track and manage your activities with a convenient calendar view.\n\nBrowse activities in a chronological list format, searchable by activity name for quick access.\n\nReceive timely notifications and reminders for upcoming activities, customizable to your preferences.\n\nPersonalize your app experience with language selection and notification settings.\n\nEnjoy localization and internationalization, supporting Serbian and English languages.\n\nEnsure optimal app performance with asynchronous execution for tasks that could potentially block the main thread.\n\nResponsive design for various screen densities and sizes, accommodating both phones and tablets.\n\nExperience a minimalistic and visually appealing user interface following the latest design trends.\n\nSeamlessly adapt to both portrait and landscape orientations for a consistent user experience.\n\nEfficiently test the app on different emulator devices to ensure compatibility.</string>
+
+    <string-array name="notification_options">
+        <item>1 hour before</item>
+        <item>1 day before</item>
+        <item>7 days before</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item>
+        <item>Serbian</item>
+    </string-array>
+
+
 </resources>

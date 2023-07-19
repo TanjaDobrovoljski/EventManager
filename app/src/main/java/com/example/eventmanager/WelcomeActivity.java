@@ -2,6 +2,7 @@ package com.example.eventmanager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
@@ -115,6 +116,23 @@ public class WelcomeActivity extends AppCompatActivity  {
         return  true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id=item.getItemId();
+        if(id==R.id.app_settings)
+        {
+            Intent intent=new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        else if(id==R.id.about_app)
+        {
+            Intent intent=new Intent(this, AboutAppActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return  super.onOptionsItemSelected(item);
+    }
 
     public void navigateToListFragment() {
          listFragment = new ListFragment(dbHelper);
@@ -137,6 +155,7 @@ public class WelcomeActivity extends AppCompatActivity  {
                 .replace(R.id.nav_host_fragment, calendarFragment)
                 .commit();
     }
+
 
 
 }

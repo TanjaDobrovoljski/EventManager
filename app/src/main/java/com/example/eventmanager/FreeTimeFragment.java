@@ -42,7 +42,9 @@ import org.json.JSONObject;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.net.URLEncoder;
@@ -135,7 +137,7 @@ public class FreeTimeFragment extends Fragment {
                         }
                         else {
                             currentImage=1;
-                            buildImageUrl("dog");
+                            buildImageUrl(String.valueOf(nameEditText.getText()));
                         }
                     }
                 });
@@ -174,7 +176,7 @@ public class FreeTimeFragment extends Fragment {
                         }
                         else {
                             currentImage=2;
-                            buildImageUrl("dog");
+                            buildImageUrl(String.valueOf(nameEditText.getText()));
                         }
                     }
                 });
@@ -418,19 +420,24 @@ public class FreeTimeFragment extends Fragment {
                 }
             } else if (requestCode == CAMERA_REQ_CODE) {
                 // Get the captured image from the intent data
-                Bundle extras = data.getExtras();
 
 
                 if (currentImage == 1) {
-                   imageBitMap1 = (Bitmap) extras.get("data");
+                    Bundle extras = data.getExtras();
+
+                    imageBitMap1 = (Bitmap) extras.get("data");
                     image1.setImageBitmap(imageBitMap1);
                 } else if (currentImage == 2) {
+                    Bundle extras = data.getExtras();
+
                     imageBitMap2 = (Bitmap) extras.get("data");
                     image2.setImageBitmap(imageBitMap2);
                 }
             }
         }
     }
+
+
     private void buildImageUrl(String sightName) {
         new AsyncTask<String, Void, String>() {
             @Override

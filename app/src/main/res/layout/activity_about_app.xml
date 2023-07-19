@@ -20,16 +20,18 @@
             android:background="@color/primary_color"
             android:theme="@style/CustomToolbarStyle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="@dimen/margin_separator"
+            />
 
-        <fragment
-            android:id="@+id/nav_host_fragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:defaultNavHost="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/aboutText"
+           android:text="@string/about_app_segment"
+           app:layout_constraintLeft_toLeftOf="parent"
+           app:layout_constraintTop_toBottomOf="@id/toolbar"
+           style="@style/CustomListItemStyle"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
