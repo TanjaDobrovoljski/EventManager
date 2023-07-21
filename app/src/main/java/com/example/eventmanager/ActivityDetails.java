@@ -39,6 +39,8 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_activity_details, container, false);
 
         dbHelperCity=new DBHelperCity(getContext());
+
+        setHasOptionsMenu(false);
         // Retrieve the clicked activity from the arguments
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -49,11 +51,20 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
                  descriptionTextView = view.findViewById(R.id.description);
                  dateActivity=view.findViewById(R.id.dateActivity);
                  timeActivity=view.findViewById(R.id.timeActivity);
-                 if("TRAVEL".equals(activity.getType())) {
-                     mapView = view.findViewById(R.id.mapView);
-                     mapView.onCreate(savedInstanceState);
-                     mapView.getMapAsync(this);
-                 }
+                mapView = view.findViewById(R.id.mapView);
+                if ("TRAVEL".equals(activity.getType())) {
+                    // If the type is "TRAVEL," show the MapView and its related views
+
+                    mapView.onCreate(savedInstanceState);
+                    mapView.getMapAsync(this);
+                    location = activity.getCity();
+                } else {
+                    // If the type is not "TRAVEL," hide the MapView and its related views
+
+                    mapView.setVisibility(View.GONE);
+                    // You can also hide other related views if needed
+                }
+
 
 
 
@@ -75,7 +86,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
        // mMap=googleMap;
-        LatLng sydney = new LatLng(100, -32);
+        LatLng sydney = new LatLng( -33.870453, 151.208755);
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));

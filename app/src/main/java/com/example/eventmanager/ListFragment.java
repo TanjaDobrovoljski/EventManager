@@ -18,11 +18,15 @@ import java.util.List;
 public class ListFragment extends Fragment {
     private RecyclerView recyclerView;
     private ArrayList<Activity> activityList;
+    private List<Activity> filteredActivityList;
     private ActivityAdapter activityAdapter;
     private DBHelper dbHelper;
 
     public ListFragment(DBHelper dbHelper) {
         this.dbHelper = dbHelper;
+    }
+    public ListFragment(List<Activity> list) {
+        this.filteredActivityList=list;
     }
 
     @Nullable
@@ -32,8 +36,17 @@ public class ListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.list_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        activityList = dbHelper.getAllActivitiesSortedByDate();
-        activityAdapter = new ActivityAdapter(activityList,dbHelper);
+        WelcomeActivity welcomeActivity = (WelcomeActivity) requireActivity();
+        welcomeActivity.setItemClicked(false);
+
+        if (filteredActivityList != null) {
+            // If the filtered list is not null, use it as the data source for the adapter
+            activityAdapter = new ActivityAdapter(filteredActivityList);
+        } else {
+            // Otherwise, use the activities from the dbHelper
+            activityList = dbHelper.getAllActivitiesSortedByDate();
+            activityAdapter = new ActivityAdapter(activityList, dbHelper);
+        }
 
         /*activityAdapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
             @Override
@@ -47,6 +60,11 @@ public class ListFragment extends Fragment {
                 // Open NewsArticleFragment on item click
                 ActivityDetails detailsArticleFragment = new ActivityDetails();
                 Bundle bundle = new Bundle();
+
+                WelcomeActivity welcomeActivity = (WelcomeActivity) requireActivity();
+                welcomeActivity.setItemClicked(true);
+                welcomeActivity.setSearchBoxVisibility(false);
+
 
                 bundle.putParcelable("activity", activity);
                 detailsArticleFragment.setArguments(bundle);

@@ -39,6 +39,11 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
         this.dbHelper=dbHelper;
     }
 
+    public ActivityAdapter(List<Activity> activityList) {
+        this.activityList = activityList;
+
+    }
+
     @NonNull
     @Override
     public ActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
