@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.text.InputFilter;
@@ -13,7 +14,16 @@ import android.widget.Toast;
 public class AddNewActivity extends AppCompatActivity {
 
     private DBHelper dbHelper;
+    private DBHelperCity dbHelperCity;
     private   WelcomeActivity activityA;
+
+    public DBHelperCity getDbHelperCity() {
+        return dbHelperCity;
+    }
+
+    public void setDbHelperCity(DBHelperCity dbHelperCity) {
+        this.dbHelperCity = dbHelperCity;
+    }
 
     public DBHelper getDbHelper() {
         return dbHelper;
@@ -42,6 +52,7 @@ public class AddNewActivity extends AppCompatActivity {
 
         int fragmentId = getIntent().getIntExtra("fragmentId", 0);
         dbHelper=new DBHelper(this);
+        dbHelperCity=new DBHelperCity(this);
         // Determine which fragment to display based on the fragment ID
         Fragment fragment = null;
         switch (fragmentId) {
@@ -52,7 +63,8 @@ public class AddNewActivity extends AppCompatActivity {
                fragment=new WorkFragment(dbHelper);
                 break;
             case 3:
-               fragment=new TravelFragment(dbHelper);
+               fragment=new TravelFragment(dbHelper,dbHelperCity);
+
                 break;
             default:
                 // Default to a fallback fragment or handle the case as desired
@@ -73,6 +85,11 @@ public class AddNewActivity extends AppCompatActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
 }

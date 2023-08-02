@@ -28,6 +28,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
    // static final LatLng Your_Location = new LatLng(23.81, 90.41); //Your LatLong
     private GoogleMap mMap;
     private String location= "";
+    Activity activity=null;
 
     DBHelperCity dbHelperCity;
     private TextView nameTextView,descriptionTextView,dateActivity,timeActivity;
@@ -44,7 +45,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
         // Retrieve the clicked activity from the arguments
         Bundle arguments = getArguments();
         if (arguments != null) {
-            Activity activity = arguments.getParcelable("activity");
+           activity = arguments.getParcelable("activity");
             if (activity != null) {
                 // Update the UI with the details of the clicked activity
                  nameTextView = view.findViewById(R.id.activity_title);
@@ -85,12 +86,13 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-       // mMap=googleMap;
-        LatLng sydney = new LatLng( -33.870453, 151.208755);
+        mMap = googleMap;
+        LatLng location = dbHelperCity.getCoordinates(activity.getCity());
         googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        googleMap.addMarker(new MarkerOptions().position(location).title("Marker in Sydney"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7f)); // Adjust the zoom level here
     }
+
 
     @Override
     public void onResume() {

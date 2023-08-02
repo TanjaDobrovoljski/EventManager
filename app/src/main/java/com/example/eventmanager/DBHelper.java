@@ -5,14 +5,17 @@ import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -95,7 +98,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("color", color);
 
         db.insert(ACTIVITY_TABLE_NAME, null, contentValues);
-      //  sortActivitiesByDate();
+
+
         return true;
     }
 
@@ -299,5 +303,87 @@ public class DBHelper extends SQLiteOpenHelper {
         return array_list;
     }*/
 
+    @SuppressLint("Range")
+    public ArrayList<Activity> getActivitiesForDateRange(String startDate, int daysAfter) {
+        ArrayList<Activity> activities = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the date range for the query
+        String endDate = calculateEndDate(startDate, daysAfter);
+
+        // Define the format for dates in the "yyyy-M-dd" format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            // Parse the start and end dates and format them in "yyyy-M-dd" format
+            Date startDateObject = dateFormat.parse(startDate);
+            Date endDateObject = dateFormat.parse(endDate);
+            startDate = dateFormat.format(startDateObject);
+            endDate = dateFormat.format(endDateObject);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Define the query to retrieve activities within the specified date range
+        String query = "SELECT * FROM " + ACTIVITY_TABLE_NAME +
+                " WHERE date =? ORDER BY date ASC";
+
+
+        Cursor cursor = db.rawQuery(query, new String[]{endDate});
+
+        // Check if the cursor has any data
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String date = cursor.getString(cursor.getColumnIndex("date"));
+
+                // Retrieve the image1 and image2 byte arrays
+                byte[] image1ByteArray = cursor.getBlob(cursor.getColumnIndex("image1"));
+                byte[] image2ByteArray = cursor.getBlob(cursor.getColumnIndex("image2"));
+
+                // Convert the byte arrays to Bitmaps
+                Bitmap image1 = BitmapFactory.decodeByteArray(image1ByteArray, 0, image1ByteArray.length);
+                Bitmap image2 = BitmapFactory.decodeByteArray(image2ByteArray, 0, image2ByteArray.length);
+
+                int color = cursor.getInt(cursor.getColumnIndex("color"));
+
+                // Create an Activity object and add it to the activityList
+                Activity activity = new Activity(id, type, name, time, description, city, date, image1, image2, color);
+                activities.add(activity);
+            } while (cursor.moveToNext());
+        }
+
+        // Close the cursor and database connection
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+
+        return activities;
+    }
+
+
+
+    private String calculateEndDate(String startDate, int daysAfter) {
+        // Convert the start date to a Date object
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date date;
+        try {
+            date = dateFormat.parse(startDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return startDate; // Return the start date as-is in case of parsing error
+        }
+
+        // Calculate the end date by adding the specified number of days to the start date
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, daysAfter);
+        return dateFormat.format(calendar.getTime());
+    }
 
 }

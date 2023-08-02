@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -102,11 +103,16 @@ public class WelcomeActivity extends AppCompatActivity  {
         dbHelperCity.insertCity("Banja Luka",44.772182,17.191000);
         dbHelperCity.insertCity("Belgrade",44.786568,20.448922);
         dbHelperCity.insertCity("Zagreb",45.815011,15.981919);
-        dbHelperCity.insertCity("Paris",-6.889043,107.596066);
+        dbHelperCity.insertCity("Paris",48.864716,2.349014);
         dbHelperCity.insertCity("Prague",50.075538,14.437800);
         dbHelperCity.insertCity("Sarajevo",43.856430,18.413029);
         dbHelperCity.insertCity("Rome",41.902782,12.496366);
         dbHelperCity.insertCity("Madrid",40.416775,-3.703790);
+        dbHelperCity.insertCity("Los Angeles",34.052235,-118.243683);
+        dbHelperCity.insertCity("Mykonos",37.450001,25.350000);
+        dbHelperCity.insertCity("St Petersburg",59.937500,30.308611);
+        dbHelperCity.insertCity("Innsbruck",47.259659,11.400375);
+        dbHelperCity.insertCity("Salzburg",47.811195,13.033229);
 
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setTitle(getString(R.string.app_name));
@@ -296,5 +302,9 @@ public class WelcomeActivity extends AppCompatActivity  {
     }
 
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 
 }

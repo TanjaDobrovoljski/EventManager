@@ -12,6 +12,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Pair;
+
 import com.google.android.gms.maps.model.LatLng;
 
 public class DBHelperCity extends SQLiteOpenHelper {
@@ -60,6 +62,9 @@ public class DBHelperCity extends SQLiteOpenHelper {
         db.insert(CITY_TABLE_NAME, null, contentValues);
         return true;
     }
+
+
+
 
     @SuppressLint("Range")
     public LatLng getCoordinates(String cityName) {

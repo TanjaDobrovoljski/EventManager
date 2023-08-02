@@ -28,6 +28,7 @@ public class TravelFragment extends Fragment {
 
     private EditText nameEditText;
     DBHelper dbHelper;
+    DBHelperCity dbHelperCity;
     private CalendarView calendarView;
     private AutoCompleteTextView locationAutoCompleteTextView;
     private EditText descriptionEditText;
@@ -45,9 +46,19 @@ public class TravelFragment extends Fragment {
     private String location= "";
     private String selectedHour = "";
     private String selectedMinute = "";
+    private  ArrayList<City> cities;
 
-    public TravelFragment(DBHelper dbHelper) {
+    public DBHelperCity getDbHelperCity() {
+        return dbHelperCity;
+    }
+
+    public void setDbHelperCity(DBHelperCity dbHelperCity) {
+        this.dbHelperCity = dbHelperCity;
+    }
+
+    public TravelFragment(DBHelper dbHelper,DBHelperCity dbHelperCity) {
         this.dbHelper=dbHelper;
+        this.dbHelperCity=dbHelperCity;
     }
 
     @Override
@@ -111,7 +122,7 @@ public class TravelFragment extends Fragment {
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 // Retrieve the selected date
                 month=month+1;
-                selectedDate = year + "-" + month + "-" + dayOfMonth;
+                selectedDate = formatDateToDB(year, month , dayOfMonth);
 
                 Calendar currentDate = Calendar.getInstance();
                 int currentYear = currentDate.get(Calendar.YEAR);
@@ -129,24 +140,29 @@ public class TravelFragment extends Fragment {
 
         descriptionEditText = view.findViewById(R.id.descriptionEditText);
         locationAutoCompleteTextView = view.findViewById(R.id.locationAutoCompleteTextView);
+        cities=dbHelperCity.getAllCities();
+        String[] locations = new String[cities.size()];
+        int i=0;
+        for (City c:cities)
+        {
+            locations[i]=c.getName();
+            i++;
+        }
 
-
-        City c1=new City("London",51.509865,-0.118092);
-        City c2=new City("Banja Luka",44.772182,17.191000);
-        City c3=new City("Belgrade",44.786568,20.448922);
-        City c4=new City("Zagreb",45.815011,15.981919);
-        City c5=new City("Paris",-6.889043,107.596066);
-        City c6=new City("Prague",50.075538,14.437800);
-        City c7=new City("Sarajevo",43.856430,18.413029);
-        City c8=new City("Rome",41.902782,12.496366);
-        City c9=new City("Madrid",40.416775,-3.703790);
-
-        String[] locations = {c1.getName(),c2.getName(),c3.getName(),c4.getName(),c5.getName(), c6.getName(), c7.getName(), c8.getName(),c9.getName()}; // Replace with your list of locations
         ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, locations);
         locationAutoCompleteTextView.setAdapter(locationAdapter);
 
 
         return view;
+    }
+
+    private String formatDateToDB(int year, int month, int dayOfMonth) {
+        // Ensure that the month and day are formatted with leading zeros if needed
+        String formattedMonth = (month < 10) ? "0" + month : String.valueOf(month);
+        String formattedDay = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
+
+        // Combine the formatted components to get the final "yyyy-MM-dd" format
+        return year + "-" + formattedMonth + "-" + formattedDay;
     }
 
     private void updateHourSpinner(boolean isToday) {

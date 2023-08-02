@@ -239,7 +239,7 @@ public class FreeTimeFragment extends Fragment {
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 // Retrieve the selected date
                 month=month+1;
-                 selectedDate = year + "-" + month + "-" + dayOfMonth;
+                 selectedDate = formatDateToDB(year, month , dayOfMonth);
 
                 Calendar currentDate = Calendar.getInstance();
                 int currentYear = currentDate.get(Calendar.YEAR);
@@ -249,6 +249,8 @@ public class FreeTimeFragment extends Fragment {
 
                 // Check if the selected date is today
                 boolean isToday = (year == currentYear && month == currentMonth && dayOfMonth == currentDay);
+
+
 
                 // Update the hour spinner based on the selected date
                 updateHourSpinner(isToday);
@@ -281,6 +283,14 @@ public class FreeTimeFragment extends Fragment {
         return view;
     }
 
+    private String formatDateToDB(int year, int month, int dayOfMonth) {
+        // Ensure that the month and day are formatted with leading zeros if needed
+        String formattedMonth = (month < 10) ? "0" + month : String.valueOf(month);
+        String formattedDay = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
+
+        // Combine the formatted components to get the final "yyyy-MM-dd" format
+        return year + "-" + formattedMonth + "-" + formattedDay;
+    }
 
 
     private void updateHourSpinner(boolean isToday) {
