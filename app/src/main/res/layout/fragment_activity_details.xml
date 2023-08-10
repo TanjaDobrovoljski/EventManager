@@ -65,6 +65,7 @@
             android:layout_height="@dimen/image_dim_view"
             android:src="@drawable/image_holder"
             android:layout_marginRight="@dimen/image_padding"
+            android:layout_marginBottom="@dimen/margin_separator"
            />
 
         <ImageView

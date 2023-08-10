@@ -2,6 +2,9 @@ package com.example.eventmanager;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -43,7 +46,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
 
         dbHelperCity=new DBHelperCity(getContext());
 
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
         // Retrieve the clicked activity from the arguments
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -77,11 +80,6 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
                 }
 
 
-
-
-
-                // Set other text views with the respective details
-
                 nameTextView.setText(activity.getName());
                 descriptionTextView.setText(activity.getDescription());
                 dateActivity.setText(activity.getDate());
@@ -94,6 +92,28 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.details_main,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.app_edit:
+                return false;
+            case R.id.app_delete:
+                return true;
+
+            default:
+                break;
+        }
+
+        return false;
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -110,7 +130,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         if(mapView!=null)
-        mapView.onResume();
+            mapView.onResume();
     }
 
     @Override

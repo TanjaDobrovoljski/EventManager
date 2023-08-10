@@ -227,11 +227,20 @@ public class WorkFragment extends Fragment {
             selectedTime+= selectedMinute;
         }
 
-
+        if("".equals(selectedDate))
+        {
+            Calendar currentDate = Calendar.getInstance();
+            int year = currentDate.get(Calendar.YEAR);
+            int month = currentDate.get(Calendar.MONTH);
+            int dayOfMonth = currentDate.get(Calendar.DAY_OF_MONTH);
+            // Retrieve the selected date
+            month = month + 1;
+            selectedDate = formatDateToDB(year, month, dayOfMonth);
+        }
 
 
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime)
-                || TextUtils.isEmpty(description) || TextUtils.isEmpty(location)) {
+             || TextUtils.isEmpty(location)) {
             return false; // At least one field is empty
         }
 

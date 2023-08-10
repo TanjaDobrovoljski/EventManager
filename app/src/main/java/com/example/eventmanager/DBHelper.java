@@ -131,6 +131,50 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return exists;
     }
+
+    @SuppressLint("Range")
+    public int getActivityId(String type, String name, String time, String description, String city, String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Define the columns to retrieve
+        String[] columns = {"id"};
+
+        // Define the WHERE clause with the given attributes
+        String selection = "type = ? AND name = ? AND time = ? AND description = ? AND city = ? AND date = ?";
+        String[] selectionArgs = {type, name, time, description, city, date};
+
+        // Execute the query
+        Cursor cursor = db.query(ACTIVITY_TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+
+        int activityId = -1; // Default value if activity is not found
+
+        if (cursor.moveToFirst()) {
+            // Retrieve the id from the cursor
+            activityId = cursor.getInt(cursor.getColumnIndex("id"));
+        }
+
+        // Close the cursor
+        cursor.close();
+
+        return activityId;
+    }
+
+
+    public boolean deleteActivity(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Define the WHERE clause with the id value
+        String whereClause = "id = ?";
+        String[] whereArgs = { String.valueOf(id) };
+
+        // Delete the row with the given id from the database
+        int rowsDeleted = db.delete(ACTIVITY_TABLE_NAME, whereClause, whereArgs);
+
+        // Check if any row was deleted
+        return rowsDeleted > 0;
+    }
+
+
     private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);

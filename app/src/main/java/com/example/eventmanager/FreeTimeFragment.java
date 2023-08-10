@@ -177,7 +177,8 @@ public class FreeTimeFragment extends Fragment {
                         }
                         else {
                             currentImage=2;
-                            buildImageUrl(String.valueOf(nameEditText.getText()));
+                           buildImageUrl(String.valueOf(nameEditText.getText()));
+
                         }
                     }
                 });
@@ -262,6 +263,7 @@ public class FreeTimeFragment extends Fragment {
         locationAutoCompleteTextView = view.findViewById(R.id.locationAutoCompleteTextView);
         cities=dbHelperCity.getAllCities();
         String[] locations = new String[cities.size()];
+
         int i=0;
         for (City c:cities)
         {
@@ -361,9 +363,18 @@ public class FreeTimeFragment extends Fragment {
             selectedMinute = minuteSpinner.getSelectedItem().toString();
             selectedTime+= selectedMinute;
         }
-
+        if("".equals(selectedDate))
+        {
+            Calendar currentDate = Calendar.getInstance();
+            int year = currentDate.get(Calendar.YEAR);
+            int month = currentDate.get(Calendar.MONTH);
+            int dayOfMonth = currentDate.get(Calendar.DAY_OF_MONTH);
+        // Retrieve the selected date
+        month = month + 1;
+        selectedDate = formatDateToDB(year, month, dayOfMonth);
+        }
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime)
-                || TextUtils.isEmpty(description) || TextUtils.isEmpty(location)) {
+                 || TextUtils.isEmpty(location)) {
             return false; // At least one field is empty
         }
 
@@ -423,23 +434,25 @@ public class FreeTimeFragment extends Fragment {
                     }
                 }
             } else if (requestCode == CAMERA_REQ_CODE) {
-                // Get the captured image from the intent data
-
-
                 if (currentImage == 1) {
-                    Bundle extras = data.getExtras();
+                    // Get the captured image from the intent data
+                    Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
 
-                    imageBitMap1 = (Bitmap) extras.get("data");
+                    // Set the image to the ImageView
+                    imageBitMap1 = capturedImage;
                     image1.setImageBitmap(imageBitMap1);
                 } else if (currentImage == 2) {
-                    Bundle extras = data.getExtras();
+                    // Get the captured image from the intent data
+                    Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
 
-                    imageBitMap2 = (Bitmap) extras.get("data");
+                    // Set the image to the ImageView
+                    imageBitMap2 = capturedImage;
                     image2.setImageBitmap(imageBitMap2);
                 }
             }
         }
     }
+
 
 
     private void buildImageUrl(String sightName) {
@@ -452,7 +465,6 @@ public class FreeTimeFragment extends Fragment {
 
                     // Construct the API URL with the sight name parameter
                     String apiUrl = "https://api.pexels.com/v1/search?query=" + encodedSightName + "&per_page=2";
-
                     OkHttpClient client = new OkHttpClient();
                     Request request = new Request.Builder()
                             .url(apiUrl)
@@ -478,7 +490,7 @@ public class FreeTimeFragment extends Fragment {
                 if (imageUrl != null) {
                     loadImageFromUrl(imageUrl);
                 } else {
-                    // Handle the error case
+                    buildImageUrl("freetime");
                 }
             }
         }.execute(sightName);
@@ -494,6 +506,7 @@ public class FreeTimeFragment extends Fragment {
             flag=1;
         else if(flag==1)
             flag=0;
+
         if (photosArray.length() > 0) {
             JSONObject photoObj = photosArray.getJSONObject(flag);
             JSONObject srcObj = photoObj.getJSONObject("src");
@@ -561,7 +574,7 @@ public class FreeTimeFragment extends Fragment {
                         });
             }
         } else {
-            // Handle the case where imageUrl is null or invalid
+            buildImageUrl("freetime");
         }
     }
 
