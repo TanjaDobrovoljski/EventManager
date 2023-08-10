@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
     DBHelperCity dbHelperCity;
     private TextView nameTextView,descriptionTextView,dateActivity,timeActivity;
     private MapView mapView;
+    private ImageView image1,image2;
 
     @Nullable
     @Override
@@ -55,16 +57,25 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
                 mapView = view.findViewById(R.id.mapView);
                 if ("TRAVEL".equals(activity.getType())) {
                     // If the type is "TRAVEL," show the MapView and its related views
-
+                    mapView.setVisibility(View.VISIBLE);
                     mapView.onCreate(savedInstanceState);
                     mapView.getMapAsync(this);
                     location = activity.getCity();
-                } else {
-                    // If the type is not "TRAVEL," hide the MapView and its related views
-
-                    mapView.setVisibility(View.GONE);
-                    // You can also hide other related views if needed
                 }
+                else {
+                    // If the type is not "TRAVEL," hide the MapView and its related views
+                    mapView.setVisibility(View.GONE);
+                    mapView=null;
+                }
+
+                if("FREE".equals((activity.getType())))
+                {
+                    image1=view.findViewById(R.id.image1);
+                    image2=view.findViewById(R.id.image2);
+                    image1.setImageBitmap(activity.getImage1());
+                    image2.setImageBitmap(activity.getImage2());
+                }
+
 
 
 
@@ -86,10 +97,11 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
         LatLng location = dbHelperCity.getCoordinates(activity.getCity());
         googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.addMarker(new MarkerOptions().position(location).title("Marker in Sydney"));
+        googleMap.addMarker(new MarkerOptions().position(location).title("Marker in "+ activity.getCity()));
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7f)); // Adjust the zoom level here
     }
 
@@ -97,24 +109,28 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
     @Override
     public void onResume() {
         super.onResume();
+        if(mapView!=null)
         mapView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if(mapView!=null)
         mapView.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(mapView!=null)
         mapView.onDestroy();
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        if(mapView!=null)
         mapView.onSaveInstanceState(outState);
     }
 

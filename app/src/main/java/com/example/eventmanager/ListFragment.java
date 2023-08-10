@@ -67,6 +67,9 @@ public class ListFragment extends Fragment {
 
 
                 bundle.putParcelable("activity", activity);
+
+                bundle.putString("fragmentType", "FreeTimeFragment");
+
                 detailsArticleFragment.setArguments(bundle);
                 getParentFragmentManager()
                         .beginTransaction()

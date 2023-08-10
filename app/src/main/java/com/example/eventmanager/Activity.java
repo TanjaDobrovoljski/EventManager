@@ -16,6 +16,10 @@ public class Activity implements Parcelable {
     private String type;
     private int color;
 
+    private String fragmentType;
+
+
+
     public Bitmap getImage1() {
         return image1;
     }
