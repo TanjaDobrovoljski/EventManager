@@ -160,7 +160,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean deleteActivity(int id) {
+    /*public boolean deleteActivity(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Define the WHERE clause with the id value
@@ -173,7 +173,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Check if any row was deleted
         return rowsDeleted > 0;
     }
-
+*/
 
     private static byte[] getBitmapAsByteArray(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -429,5 +429,73 @@ public class DBHelper extends SQLiteOpenHelper {
         calendar.add(Calendar.DAY_OF_MONTH, daysAfter);
         return dateFormat.format(calendar.getTime());
     }
+
+
+    @SuppressLint("Range")
+    public ArrayList<Activity> getActivitiesForNextHour(String startDate) {
+        ArrayList<Activity> activities = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            // Parse the start and end dates and format them in "yyyy-M-dd" format
+            Date startDateObject = dateFormat.parse(startDate);
+            startDate = dateFormat.format(startDateObject);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Get the current date and time
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        String currentDate = dateFormat.format(calendar.getTime());
+        String currentTime = timeFormat.format(calendar.getTime());
+
+        // Calculate the end time for the next hour
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        String nextHour = timeFormat.format(calendar.getTime());
+
+        // Define the query to retrieve activities within the next hour
+        String query = "SELECT * FROM " + ACTIVITY_TABLE_NAME +
+                " WHERE date = ? AND time > ? AND time <= ? ORDER BY date ASC, time ASC";
+
+        Cursor cursor = db.rawQuery(query, new String[]{startDate, currentTime, nextHour});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String date = cursor.getString(cursor.getColumnIndex("date"));
+
+                // Retrieve the image1 and image2 byte arrays
+                byte[] image1ByteArray = cursor.getBlob(cursor.getColumnIndex("image1"));
+                byte[] image2ByteArray = cursor.getBlob(cursor.getColumnIndex("image2"));
+
+                // Convert the byte arrays to Bitmaps
+                Bitmap image1 = BitmapFactory.decodeByteArray(image1ByteArray, 0, image1ByteArray.length);
+                Bitmap image2 = BitmapFactory.decodeByteArray(image2ByteArray, 0, image2ByteArray.length);
+
+                int color = cursor.getInt(cursor.getColumnIndex("color"));
+
+                // Create an Activity object and add it to the activityList
+                Activity activity = new Activity(id, type, name, time, description, city, date, image1, image2, color);
+                activities.add(activity);
+            } while (cursor.moveToNext());
+        }
+
+        // Close the cursor and database connection
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+
+        return activities;
+    }
+
+
 
 }

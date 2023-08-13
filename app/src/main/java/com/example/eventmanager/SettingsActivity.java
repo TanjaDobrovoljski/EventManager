@@ -74,7 +74,8 @@ public class SettingsActivity extends AppCompatActivity {
         notificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         notificationDropdown.setAdapter(notificationAdapter);
 
-        // Set listeners
+        notificationDropdown.setVisibility(isNotificationSwitchChecked ? View.VISIBLE : View.GONE);
+
        /* notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 notificationDropdown.setVisibility(View.VISIBLE);
@@ -85,15 +86,16 @@ public class SettingsActivity extends AppCompatActivity {
             } else {
                 notificationDropdown.setVisibility(View.GONE);
             }
-        });
+        });*/
 
         notificationDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedOption = parent.getItemAtPosition(position).toString();
-                if (notificationSwitch.isChecked() && position > 1) {
-                    ArrayList<Activity> activities = dbHelper.getActivitiesForDateRange(getCurrentDate(),5);
-                    showNotification(activities);
+                if (notificationSwitch.isChecked() && position >= 0) {
+                   // ArrayList<Activity> activities = dbHelper.getActivitiesForDateRange(getCurrentDate(),7);
+                    //showNotification(activities);
+                    handleNotificationOption();
                 }
             }
 
@@ -102,19 +104,17 @@ public class SettingsActivity extends AppCompatActivity {
                 // Handle when nothing is selected
             }
         });
-*/
 
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 notificationDropdown.setVisibility(View.VISIBLE);
-                handleNotificationOption();
             } else {
                 notificationDropdown.setVisibility(View.GONE);
             }
             saveNotificationSwitchState(isChecked);
         });
 
-        notificationDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+     /*  notificationDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (notificationSwitch.isChecked()) {
@@ -125,7 +125,9 @@ public class SettingsActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
                 // Handle when nothing is selected
             }
-        });
+        });*/
+
+
 
         languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -145,13 +147,20 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("save", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("value", isChecked);
+
+        if (isChecked) {
+            int selectedPosition = notificationDropdown.getSelectedItemPosition();
+            editor.putInt("selectedPosition", selectedPosition);
+        }
+
+        editor.apply();
         editor.apply();
     }
 
 
     private void handleNotificationOption() {
         int selectedPosition = notificationDropdown.getSelectedItemPosition();
-        if (selectedPosition > 0) {
+        if (selectedPosition > -1) {
             // Save the selected position of the spinner in SharedPreferences
             SharedPreferences preferences = getSharedPreferences("save", MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
@@ -161,7 +170,7 @@ public class SettingsActivity extends AppCompatActivity {
             // Show notification based on the selected option
             String selectedOption = notificationDropdown.getItemAtPosition(selectedPosition).toString();
             if (selectedOption.equals("1 hour before")) {
-                ArrayList<Activity> activities = dbHelper.getActivitiesForDateRange(getCurrentDate(), 1);
+                ArrayList<Activity> activities = dbHelper.getActivitiesForNextHour(getCurrentDate());
                 showNotification(activities);
             } else if (selectedOption.equals("1 day before")) {
                 ArrayList<Activity> activities = dbHelper.getActivitiesForDateRange(getCurrentDate(), 1);
@@ -172,6 +181,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         }
     }
+
 
 
     private String getCurrentDate() {

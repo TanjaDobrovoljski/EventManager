@@ -63,6 +63,19 @@ public class DBHelperCity extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean cityExists(String cityName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(CITY_TABLE_NAME,
+                new String[]{"name"},
+                "name = ?",
+                new String[]{cityName},
+                null, null, null);
+
+        boolean exists = cursor.getCount() > 0;
+
+        cursor.close();
+        return exists;
+    }
 
 
 

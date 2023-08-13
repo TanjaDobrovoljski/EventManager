@@ -1,5 +1,7 @@
 package com.example.eventmanager;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +23,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -38,6 +42,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
     private TextView nameTextView,descriptionTextView,dateActivity,timeActivity;
     private MapView mapView;
     private ImageView image1,image2;
+    private DBHelper dbHelper;
 
     @Nullable
     @Override
@@ -45,6 +50,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_activity_details, container, false);
 
         dbHelperCity=new DBHelperCity(getContext());
+        dbHelper=new DBHelper(getContext());
 
         setHasOptionsMenu(true);
         // Retrieve the clicked activity from the arguments
@@ -106,6 +112,19 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
             case R.id.app_edit:
                 return false;
             case R.id.app_delete:
+             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle("Confirm Delete");
+                builder.setMessage("Are you sure you want to delete this activity?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       dbHelper.deleteActivity(dbHelper.getActivityId(activity.getType(),activity.getName(),activity.getTime(),activity.getDescription(),activity.getCity(),activity.getDate()));
+                        Toast.makeText(getContext(),"Successfully deleted "+activity.getName(),Toast.LENGTH_SHORT).show();
+                       getActivity().onBackPressed();
+                    }
+                });
+                builder.setNegativeButton("No", null);
+                builder.show();
                 return true;
 
             default:
@@ -119,10 +138,24 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-        LatLng location = dbHelperCity.getCoordinates(activity.getCity());
+        if(dbHelperCity.cityExists(activity.getCity()))
+        {
+            LatLng location = dbHelperCity.getCoordinates(activity.getCity());
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.addMarker(new MarkerOptions().position(location).title("Marker in "+ activity.getCity()));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7f)); // Adjust the zoom level here
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 7f));
+        }
+        else {
+            LatLng defaultLocation = new LatLng(0, 0);
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(defaultLocation)
+                    .title("City Not Found")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)); // Use a red marker icon
+
+            googleMap.addMarker(markerOptions);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 7f));
+            Toast.makeText(getContext(), "City not found", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
