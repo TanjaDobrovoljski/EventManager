@@ -15,7 +15,8 @@
         android:background="@color/primary_color"
         android:theme="@style/CustomToolbarStyle"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        android:layout_marginBottom="@dimen/margin_separator" />
+        android:layout_marginBottom="@dimen/margin_separator"
+        app:title="@string/settings"/>
 
     <Spinner
         android:layout_width="match_parent"
@@ -37,7 +38,7 @@
         android:layout_below="@+id/cachingSwitch"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:text="Notifications"
+        android:text="@string/settings_notifications"
         style="@style/CustomListItemStyle"
         android:layout_marginBottom="@dimen/margin_separator" />
 

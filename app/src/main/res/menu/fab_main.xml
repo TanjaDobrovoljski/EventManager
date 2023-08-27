@@ -7,20 +7,20 @@
         android:id="@+id/freeTime"
         app:showAsAction="never"
         android:orderInCategory="100"
-        android:title="Slobodno vrijeme"></item>
+        android:title="@string/add_freetime"></item>
 
     <item
         android:id="@+id/work"
         app:showAsAction="never"
         android:orderInCategory="101"
-        android:title="Posao">
+        android:title="@string/add_work">
 
     </item>
     <item
         android:id="@+id/travel"
         app:showAsAction="never"
         android:orderInCategory="102"
-        android:title="Putovanje">
+        android:title="@string/add_travel">
 
     </item>
 </menu>

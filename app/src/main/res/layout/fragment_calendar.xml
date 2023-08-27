@@ -20,6 +20,4 @@
         app:mcv_weekDayTextAppearance="@style/CustomCalendarViewMonth"
         app:mcv_dateTextAppearance="@style/CustomCalendarViewDate"/>
 
-
-
 </FrameLayout>

@@ -7,19 +7,19 @@
         android:id="@+id/app_search"
         app:showAsAction="always"
         android:orderInCategory="99"
-        android:title="Search"
+        android:title="@string/menu_search"
         android:icon="@drawable/ic_search"></item>
     <item
         android:id="@+id/app_settings"
         app:showAsAction="never"
         android:orderInCategory="100"
-        android:title="Podešavanja"></item>
+        android:title="@string/menu_settings"></item>
 
     <item
         android:id="@+id/about_app"
         app:showAsAction="never"
         android:orderInCategory="101"
-        android:title="O aplikaciji">
+        android:title="@string/menu_aboutApp">
 
     </item>
 </menu>

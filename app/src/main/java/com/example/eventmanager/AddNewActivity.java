@@ -46,7 +46,6 @@ public class AddNewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new);
         setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle("Dodavanje nove aktivnosti");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activityA = ActivityHolder.getActivityA();
 

@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Locale;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -35,38 +38,58 @@ public class SettingsActivity extends AppCompatActivity {
     private Switch notificationSwitch;
     private Spinner notificationDropdown;
     private DBHelper dbHelper;
+    private static final String SELECTED_LANGUAGE = "Locale.Helper.Selected.Language";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        LanguageHelper.applyLanguage(this);
+
+
+
         dbHelper=new DBHelper(this);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Podesavanja");
         createNotificationChannel();
 
         // Initialize views
         languageSpinner = findViewById(R.id.languageSpinner);
         notificationSwitch = findViewById(R.id.notificationSwitch);
+        notificationDropdown = findViewById(R.id.notificationDropdown);
+
         SharedPreferences preferences = getSharedPreferences("save", MODE_PRIVATE);
+        SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(this);
+
+      //  SharedPreferences preferences = getSharedPreferences("save", MODE_PRIVATE);
         boolean isNotificationSwitchChecked = preferences.getBoolean("value", false);
 
         // Set the state of the notification switch
         notificationSwitch.setChecked(isNotificationSwitchChecked);
 
 
-        notificationDropdown = findViewById(R.id.notificationDropdown);
 
-        int selectedPosition = preferences.getInt("selectedPosition", 0);
-        notificationDropdown.setSelection(selectedPosition);
+
+        int selectedPosition = preferences.getInt("selectedPosition", -1);
+        if(selectedPosition != -1) {
+            // set the selected value of the spinner
+            notificationDropdown.setSelection(selectedPosition);
+        }
 
 
         // Set up language spinner
         ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(this,
                 R.array.languages, android.R.layout.simple_spinner_item);
         languageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
         languageSpinner.setAdapter(languageAdapter);
+        int selectedPositionLang = sh.getInt("selectedLanguage", -1);
+        if(selectedPositionLang != -1) {
+            // set the selected value of the spinner
+            languageSpinner.setSelection(selectedPositionLang);
+        }
 
         // Set up notification dropdown spinner
         ArrayAdapter<CharSequence> notificationAdapter = ArrayAdapter.createFromResource(this,
@@ -133,19 +156,42 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedLanguage = parent.getItemAtPosition(position).toString();
-                // Handle language selection
-            }
+                SharedPreferences shPreferences = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+                String savedLanguage = shPreferences.getString(SELECTED_LANGUAGE, Locale.getDefault().getLanguage());
+                String flag="";
+
+                    if (selectedLanguage.equals("English") || selectedLanguage.equals("Engleski")) {
+                        flag="en";
+                        if (!flag.equals(savedLanguage)) {
+                            setLocale(SettingsActivity.this, "en");
+                            saveSelectedLanguage("en");
+
+
+                        }
+                    } else if (selectedLanguage.equals("Serbian") || selectedLanguage.equals("Srpski")) {
+                        flag="sr";
+                        if (!flag.equals(savedLanguage)) {
+                            setLocale(SettingsActivity.this, "sr");
+                            saveSelectedLanguage("sr");
+
+                        }
+                    }
+                }
+
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Handle when nothing is selected
             }
         });
+
+
     }
 
     private void saveNotificationSwitchState(boolean isChecked) {
-        SharedPreferences preferences = getSharedPreferences("save", MODE_PRIVATE);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
+
         editor.putBoolean("value", isChecked);
 
         if (isChecked) {
@@ -154,6 +200,14 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         editor.apply();
+    }
+
+    private void saveSelectedLanguage(String language) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(SELECTED_LANGUAGE, language);
+        int selected=languageSpinner.getSelectedItemPosition();
+        editor.putInt("selectedLanguage",selected);
         editor.apply();
     }
 
@@ -161,7 +215,6 @@ public class SettingsActivity extends AppCompatActivity {
     private void handleNotificationOption() {
         int selectedPosition = notificationDropdown.getSelectedItemPosition();
         if (selectedPosition > -1) {
-            // Save the selected position of the spinner in SharedPreferences
             SharedPreferences preferences = getSharedPreferences("save", MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt("selectedPosition", selectedPosition);
@@ -169,13 +222,13 @@ public class SettingsActivity extends AppCompatActivity {
 
             // Show notification based on the selected option
             String selectedOption = notificationDropdown.getItemAtPosition(selectedPosition).toString();
-            if (selectedOption.equals("1 hour before")) {
+            if (selectedOption.equals("1 hour before") || selectedOption.equals("1 sat ranije")) {
                 ArrayList<Activity> activities = dbHelper.getActivitiesForNextHour(getCurrentDate());
                 showNotification(activities);
-            } else if (selectedOption.equals("1 day before")) {
+            } else if (selectedOption.equals("1 day before") || selectedOption.equals("1 dan ranije")) {
                 ArrayList<Activity> activities = dbHelper.getActivitiesForDateRange(getCurrentDate(), 1);
                 showNotification(activities);
-            } else if (selectedOption.equals("7 days before")) {
+            } else if (selectedOption.equals("7 days before") || selectedOption.equals("7 dana ranije")) {
                 ArrayList<Activity> activities = dbHelper.getActivitiesForDateRange(getCurrentDate(), 7);
                 showNotification(activities);
             }
@@ -236,4 +289,43 @@ public class SettingsActivity extends AppCompatActivity {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
+
+
+
+    public void setLocale(Context context, String language) {
+        // sacuvamo novi jezik u SharedPreferences
+        SharedPreferences shPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = shPreferences.edit();
+        editor.putString(SELECTED_LANGUAGE, language);
+        editor.apply();
+
+        // sacuvamo promjene u konfiguraciji aplikacije
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
+        recreate();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        // uzimamo trenutni jezik iz SharedPreferences-a
+        SharedPreferences shPreferences = PreferenceManager.getDefaultSharedPreferences(base);
+        String lang = shPreferences.getString(SELECTED_LANGUAGE, Locale.getDefault().getLanguage());
+
+        // sacuvamo promjene u konfiguraciji aplikacije
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        base.getResources().updateConfiguration(config,
+                base.getResources().getDisplayMetrics());
+        super.attachBaseContext(base);
+    }
+
+
+
+
 }

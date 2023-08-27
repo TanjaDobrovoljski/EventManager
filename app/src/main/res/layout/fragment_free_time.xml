@@ -1,3 +1,4 @@
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,21 +8,18 @@
         android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name" />
-
-
+        android:hint="@string/add_activity_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-
         android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hours" />
+            android:text="@string/add_activity_hours" />
 
         <Spinner
             android:id="@+id/hourSpinner"
@@ -31,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Minutes" />
+            android:text="@string/add_activity_minutes" />
 
         <Spinner
             android:id="@+id/minuteSpinner"
@@ -53,13 +51,13 @@
         android:id="@+id/descriptionEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Description" />
+        android:hint="@string/add_activity_description" />
 
     <AutoCompleteTextView
         android:id="@+id/locationAutoCompleteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Location" />
+        android:hint="@string/add_activity_location" />
 
 
     <LinearLayout
@@ -89,7 +87,7 @@
         android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dodaj"
+        android:text="@string/button_add"
         android:layout_gravity="center"/>
 
 </LinearLayout>

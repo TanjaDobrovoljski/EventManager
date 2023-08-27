@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Planer</string>
+    <string name="app_name">Event Manager</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="about_app_segment">Introducing Activity Planner, the ultimate Android app for organizing and planning your activities effortlessly.\n\nStay organized with essential activity details, including name, time, description, and location.\n\nEnhance your free time activities by uploading, capturing, or downloading multiple images directly from your device.\n\nFor travel activities, easily view the location on a map to get a precise idea of the city or area.\n\nEffortlessly track and manage your activities with a convenient calendar view.\n\nBrowse activities in a chronological list format, searchable by activity name for quick access.\n\nReceive timely notifications and reminders for upcoming activities, customizable to your preferences.\n\nPersonalize your app experience with language selection and notification settings.\n\nEnjoy localization and internationalization, supporting Serbian and English languages.\n\nEnsure optimal app performance with asynchronous execution for tasks that could potentially block the main thread.\n\nResponsive design for various screen densities and sizes, accommodating both phones and tablets.\n\nExperience a minimalistic and visually appealing user interface following the latest design trends.\n\nSeamlessly adapt to both portrait and landscape orientations for a consistent user experience.\n\nEfficiently test the app on different emulator devices to ensure compatibility.</string>
 
     <string-array name="notification_options">
@@ -14,4 +14,28 @@
         <item>English</item>
         <item>Serbian</item>
     </string-array>
+
+    <string name="list_view">List view</string>
+    <string name="calendar_view">Calendar view</string>
+
+    <string name="add_freetime">Freetime activity</string>
+    <string name="add_travel">Travel activity</string>
+    <string name="add_work">Work activity</string>
+
+    <string name="menu_search">Search</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_aboutApp">About application</string>
+
+    <string name="add_activity_title">Title</string>
+    <string name="add_activity_description">Description</string>
+    <string name="add_activity_location">Location</string>
+    <string name="add_activity_hours">Hour</string>
+    <string name="add_activity_minutes">Minutes</string>
+    <string name="button_add">Add</string>
+
+    <string name="search_activities">Search activities</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings">Settings</string>
+    <string name="add_new_activity">New activity</string>
+
 </resources>

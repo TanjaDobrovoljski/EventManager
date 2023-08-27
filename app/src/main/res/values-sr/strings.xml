@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Planer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="about_app_segment">Predstavljamo vam "Activity Planner", ultimativnu Android aplikaciju za organizovanje i planiranje vaših aktivnosti bez napora.\nOstanite organizovani sa osnovnim detaljima aktivnosti, uključujući naziv, vreme, opis i lokaciju.
+\nUnapredite vaše slobodno vreme dodavanjem, slikanjem ili preuzimanjem više slika direktno sa vašeg uređaja.
+\nZa putovanja, lako pregledajte lokaciju na mapi kako biste dobili preciznu ideju o gradu ili oblasti.
+\nLako pratite i upravljajte svojim aktivnostima pomoću pregleda kalendara.
+\nPregledajte aktivnosti u hronološkom formatu liste, pretraživ po nazivu aktivnosti za brz pristup.
+\nPrimanje pravovremenih obaveštenja i podsetnika za nadolazeće aktivnosti, prilagodljivih vašim preferencama.
+\nPrilagodite svoje iskustvo sa aplikacijom izborom jezika i podešavanjima obaveštenja.
+\nUživajte u lokalizaciji i internacionalizaciji, podržava srpski i engleski jezik.
+\nOsigurajte optimalnu performansu aplikacije sa asinhronim izvršavanjem zadataka koji mogu potencijalno blokirati glavnu nit.
+\nReaguje na različite gustine ekrana i veličine, prilagodljivo za telefone i tablete.
+\nIskusite minimalistički i vizuelno privlačan korisnički interfejs u skladu sa najnovijim dizajnerskim trendovima.
+\nBez problema se prilagođava i uspravnoj i horizontalnoj orijentaciji za dosledno korisničko iskustvo.
+\nEfikasno testirajte aplikaciju na različitim emulatorima kako biste osigurali kompatibilnost.</string>
+    <string-array name="notification_options">
+        <item>1 sat ranije</item>
+        <item>1 dan ranije</item>
+        <item>7 dana ranije</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>Engleski</item>
+        <item>Srpski</item>
+    </string-array>
+
+    <string name="list_view">Lista</string>
+    <string name="calendar_view">Kalendar</string>
+
+    <string name="add_freetime">Slobodno vrijeme</string>
+    <string name="add_travel">Putovanje</string>
+    <string name="add_work">Posao</string>
+
+    <string name="menu_search">Pretrazivanje</string>
+    <string name="menu_settings">Podešavanja</string>
+    <string name="menu_aboutApp">O aplikaciji</string>
+
+    <string name="add_activity_title">Naslov</string>
+    <string name="add_activity_description">Opis</string>
+    <string name="add_activity_location">Lokacija</string>
+    <string name="add_activity_hours">Sat</string>
+    <string name="add_activity_minutes">Minuti</string>
+    <string name="button_add">Dodaj</string>
+
+    <string name="search_activities">Pretraži</string>
+    <string name="settings_notifications">Obavještenja</string>
+    <string name="settings">Podešavanja</string>
+    <string name="add_new_activity">Nova aktivnost</string>
+
+</resources>

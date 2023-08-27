@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/activitiesList"
-        android:title="Lista"
+        android:title="@string/list_view"
         android:icon="@drawable/ic_events_list"/>
     <item
         android:id="@+id/activitiesCalendar"
-        android:title="Kalendar"
+        android:title="@string/calendar_view"
         android:icon="@drawable/ic_events_calendar"/>
 
 </menu>

@@ -16,14 +16,15 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary_color"
             android:theme="@style/CustomToolbarStyle"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/app_name"/>
 
         <!-- Add the search box here -->
         <AutoCompleteTextView
             android:id="@+id/searchBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search Activities"
+            android:hint="@string/search_activities"
             android:inputType="text"
             android:imeOptions="actionSearch"
             android:maxLines="1"

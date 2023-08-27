@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -28,9 +31,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class WelcomeActivity extends AppCompatActivity  {
 
+    private static final String SELECTED_LANGUAGE = "Locale.Helper.Selected.Language";
     BottomNavigationView navigationView;
     DBHelper dbHelper=new DBHelper(this);
     DBHelperCity dbHelperCity=new DBHelperCity(this);
@@ -45,6 +50,9 @@ public class WelcomeActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        LanguageHelper.applyLanguage(this);
+
         searchBox=findViewById(R.id.searchBox);
         searchBox.setVisibility(View.GONE);
 
@@ -305,6 +313,23 @@ public class WelcomeActivity extends AppCompatActivity  {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        // uzimamo trenutni jezik iz SharedPreferences-a
+        SharedPreferences shPreferences = PreferenceManager.getDefaultSharedPreferences(base);
+        String lang = shPreferences.getString(SELECTED_LANGUAGE, Locale.getDefault().getLanguage());
+
+        // sacuvamo promjene u konfiguraciji aplikacije
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        base.getResources().updateConfiguration(config,
+                base.getResources().getDisplayMetrics());
+        super.attachBaseContext(base);
     }
 
 }
