@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -36,5 +37,14 @@ public class AboutAppActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LanguageHelper.applyLanguage(this);
+        getSupportActionBar().setTitle(getString(R.string.menu_aboutApp));
+       textView.setText(getString(R.string.about_app_segment));
+
     }
 }

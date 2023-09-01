@@ -24,6 +24,8 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -33,6 +35,7 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -66,6 +69,7 @@ public class FreeTimeFragment extends Fragment {
     private CalendarView calendarView;
     private EditText descriptionEditText;
     private EditText locationEditText;
+    private TextView hour,min;
 
     private  ArrayList<City> cities;
     private Spinner hourSpinner;
@@ -105,6 +109,8 @@ public class FreeTimeFragment extends Fragment {
        buttonAdd=view.findViewById(R.id.buttonAdd);
        image1=view.findViewById(R.id.image1);
        image2=view.findViewById(R.id.image2);
+       hour=view.findViewById(R.id.hour);
+       min=view.findViewById(R.id.min);
 
 
         image1.setOnClickListener(new View.OnClickListener() {
@@ -194,11 +200,11 @@ public class FreeTimeFragment extends Fragment {
            public void onClick(View view) {
                int i;
                if(!isFormValid())
-                   Toast.makeText(view.getContext(), "Niste popunili sva polja!", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(view.getContext(), getString(R.string.add_new_activity_toast_fields), Toast.LENGTH_SHORT).show();
                else {
 
                   if( dbHelper.insertActivity("FREE",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2,ContextCompat.getColor(getContext(), R.color.primary_triadic_one))) {
-                      Toast.makeText(view.getContext(), "Uspijesno dodana aktivnost!", Toast.LENGTH_SHORT).show();
+                      Toast.makeText(view.getContext(), getString(R.string.add_new_activity_toast), Toast.LENGTH_SHORT).show();
                      if(view.getContext() instanceof AddNewActivity)
                          ((AddNewActivity) view.getContext()).getActivityA().getListFragment().refreshList();
                       goBackToPreviousActivity();
@@ -585,5 +591,18 @@ public class FreeTimeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        LanguageHelper.applyLanguage(this.getContext());
+        nameEditText.setHint(getString(R.string.add_activity_title));
+        hour.setText(getString(R.string.add_activity_hours));
+        min.setText(getString(R.string.add_activity_minutes));
+        descriptionEditText.setHint(getString(R.string.add_activity_description));
+        locationAutoCompleteTextView.setHint(getString(R.string.add_activity_location));
+        buttonAdd.setText(getString(R.string.button_add));
+
+    }
 
 }

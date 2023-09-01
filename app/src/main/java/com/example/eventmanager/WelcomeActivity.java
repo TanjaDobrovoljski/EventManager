@@ -51,7 +51,7 @@ public class WelcomeActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        LanguageHelper.applyLanguage(this);
+       // LanguageHelper.applyLanguage(this);
 
         searchBox=findViewById(R.id.searchBox);
         searchBox.setVisibility(View.GONE);
@@ -330,6 +330,60 @@ public class WelcomeActivity extends AppCompatActivity  {
         base.getResources().updateConfiguration(config,
                 base.getResources().getDisplayMetrics());
         super.attachBaseContext(base);
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        LanguageHelper.applyLanguage(this);
+        getSupportActionBar().setTitle(getString(R.string.app_name));
+        searchBox.setText(getString(R.string.search_activities));
+        Menu menu = navigationView.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            switch (item.getItemId()) {
+                case R.id.activitiesList:
+                    item.setTitle(R.string.list_view);
+                    break;
+                case R.id.activitiesCalendar:
+                    item.setTitle(R.string.calendar_view);
+                    break;
+                // Add more items as needed
+            }
+        }
+
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            switch (item.getItemId()) {
+                case R.id.freeTime:
+                    item.setTitle(R.string.add_freetime);
+                    break;
+                case R.id.work:
+                    item.setTitle(R.string.add_work);
+                    break;
+                case R.id.travel:
+                    item.setTitle(R.string.add_travel);
+                    break;
+            }
+        }
+
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            switch (item.getItemId()) {
+                case R.id.app_settings:
+                    item.setTitle(R.string.menu_settings);
+                    break;
+                case R.id.about_app:
+                    item.setTitle(R.string.menu_aboutApp);
+                    break;
+
+            }
+        }
+
+
     }
 
 }

@@ -38,4 +38,8 @@
     <string name="settings">Settings</string>
     <string name="add_new_activity">New activity</string>
 
+    <string name="add_new_activity_toast">Successfully added new activity!</string>
+    <string name="add_new_activity_toast_fields">Check your fields!</string>
+    <string name="delete_activity_toast">Do you want to delete activity</string>
+
 </resources>

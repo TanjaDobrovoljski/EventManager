@@ -18,6 +18,7 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class WorkFragment extends Fragment {
     private EditText nameEditText;
 
     DBHelper dbHelper;
+    private TextView hour,min;
     private CalendarView calendarView;
     private AutoCompleteTextView locationAutoCompleteTextView;
     private EditText descriptionEditText;
@@ -59,6 +61,9 @@ public class WorkFragment extends Fragment {
         dbHelperCity=new DBHelperCity(getContext());
         nameEditText = view.findViewById(R.id.nameEditText);
         buttonAdd=view.findViewById(R.id.buttonAdd);
+        hour=view.findViewById(R.id.hour);
+        min=view.findViewById(R.id.min);
+
 
 
         buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -271,6 +276,20 @@ public class WorkFragment extends Fragment {
         if (getActivity() != null) {
             getActivity().onBackPressed();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        LanguageHelper.applyLanguage(this.getContext());
+        nameEditText.setHint(getString(R.string.add_activity_title));
+        hour.setText(getString(R.string.add_activity_hours));
+        min.setText(getString(R.string.add_activity_minutes));
+        descriptionEditText.setHint(getString(R.string.add_activity_description));
+        locationAutoCompleteTextView.setHint(getString(R.string.add_activity_location));
+        buttonAdd.setText(getString(R.string.button_add));
+
     }
 
 }

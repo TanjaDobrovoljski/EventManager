@@ -76,7 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
             // set the selected value of the spinner
             notificationDropdown.setSelection(selectedPosition);
         }
-
+        System.out.println("pozicija: "+selectedPosition);
 
         // Set up language spinner
         ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(this,
@@ -163,7 +163,7 @@ public class SettingsActivity extends AppCompatActivity {
                     if (selectedLanguage.equals("English") || selectedLanguage.equals("Engleski")) {
                         flag="en";
                         if (!flag.equals(savedLanguage)) {
-                            setLocale(SettingsActivity.this, "en");
+                            setLocale( "en");
                             saveSelectedLanguage("en");
 
 
@@ -171,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity {
                     } else if (selectedLanguage.equals("Serbian") || selectedLanguage.equals("Srpski")) {
                         flag="sr";
                         if (!flag.equals(savedLanguage)) {
-                            setLocale(SettingsActivity.this, "sr");
+                            setLocale( "sr");
                             saveSelectedLanguage("sr");
 
                         }
@@ -292,7 +292,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
 
-    public void setLocale(Context context, String language) {
+    public void setLocale( String language) {
         // sacuvamo novi jezik u SharedPreferences
         SharedPreferences shPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = shPreferences.edit();

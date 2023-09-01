@@ -91,4 +91,12 @@ public class AddNewActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        LanguageHelper.applyLanguage(this);
+        getSupportActionBar().setTitle(getString(R.string.add_new_activity));
+    }
+
 }
