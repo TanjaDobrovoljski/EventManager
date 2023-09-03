@@ -117,8 +117,8 @@ public class FreeTimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Select Image Source");
-                builder.setItems(new CharSequence[]{"Gallery", "Camera","Internet"}, new DialogInterface.OnClickListener() {
+                builder.setTitle(getString(R.string.Image_source));
+                builder.setItems(new CharSequence[]{getString(R.string.gallery),getString(R.string.camera),"Internet"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
@@ -157,8 +157,8 @@ public class FreeTimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Select Image Source");
-                builder.setItems(new CharSequence[]{"Gallery", "Camera","Internet"}, new DialogInterface.OnClickListener() {
+                builder.setTitle(getString(R.string.Image_source));
+                builder.setItems(new CharSequence[]{getString(R.string.gallery), getString(R.string.camera),"Internet"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {

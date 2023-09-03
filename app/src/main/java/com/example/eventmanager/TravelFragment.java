@@ -78,10 +78,10 @@ public class TravelFragment extends Fragment {
                                          public void onClick(View view) {
 
                                              if(!isFormValid())
-                                                 Toast.makeText(view.getContext(), "Niste popunili sva polja!", Toast.LENGTH_SHORT).show();
+                                                 Toast.makeText(view.getContext(),  getString(R.string.add_new_activity_toast_fields), Toast.LENGTH_SHORT).show();
                                              else {
                                                  if( dbHelper.insertActivity("TRAVEL",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2, ContextCompat.getColor(getContext(), R.color.primary_triadic_two))) {
-                                                     Toast.makeText(view.getContext(), "Uspijesno dodana aktivnost!", Toast.LENGTH_SHORT).show();
+                                                     Toast.makeText(view.getContext(), getString(R.string.add_new_activity_toast), Toast.LENGTH_SHORT).show();
                                                      if(view.getContext() instanceof AddNewActivity)
                                                          ((AddNewActivity) view.getContext()).getActivityA().getListFragment().refreshList();
                                                      goBackToPreviousActivity();

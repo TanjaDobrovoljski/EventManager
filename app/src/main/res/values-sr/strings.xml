@@ -50,4 +50,18 @@
     <string name="settings">Podešavanja</string>
     <string name="add_new_activity">Nova aktivnost</string>
 
+    <string name="add_new_activity_toast">Uspijesno dodana nova aktivnost!</string>
+    <string name="add_new_activity_toast_fields">Provjerite polja!</string>
+    <string name="delete_activity_toast">Da li ste sigurni da zelite da obrisete aktivnost?</string>
+    <string name="delete_activity_toast_title">Potvrda brisanja</string>
+    <string name="delete_activity_toast_yes">Da</string>
+    <string name="delete_activity_toast_no">Ne</string>
+    <string name="delete_activity_toast_confirmation">Uspijesno obrisana</string>
+
+    <string name="location_city_not_found">Grad nije pronadjen!</string>
+
+    <string name="Image_source">Izvor slike</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galerija</string>
+
 </resources>

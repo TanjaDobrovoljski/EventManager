@@ -139,6 +139,8 @@ public class WelcomeActivity extends AppCompatActivity  {
             public void onClick(View view) {
                 PopupMenu popupMenu = new PopupMenu(WelcomeActivity.this, fab);
                 popupMenu.getMenuInflater().inflate(R.menu.fab_main, popupMenu.getMenu());
+                if (searchBox.getVisibility() == View.VISIBLE)
+                    searchBox.setVisibility(View.GONE);
 
                 // Set a click listener on the popup menu items
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -169,8 +171,11 @@ public class WelcomeActivity extends AppCompatActivity  {
 
         navigationView=findViewById(R.id.navigationView);
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (searchBox.getVisibility() == View.VISIBLE)
+                    searchBox.setVisibility(View.GONE);
                 switch (item.getItemId()) {
                     case R.id.activitiesList:
                         // Navigate to the ListFragment
@@ -230,14 +235,17 @@ public class WelcomeActivity extends AppCompatActivity  {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
+
         if(id==R.id.app_settings)
         {
+            setTitle(getString(R.string.menu_settings));
             Intent intent=new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }
         else if(id==R.id.about_app)
         {
+            setTitle(getString(R.string.menu_aboutApp));
             Intent intent=new Intent(this, AboutAppActivity.class);
             startActivity(intent);
             return true;
@@ -275,7 +283,10 @@ public class WelcomeActivity extends AppCompatActivity  {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // Disable menu options if an item is clicked
         menu.findItem(R.id.app_settings).setVisible(!isItemClicked);
+        menu.findItem(R.id.app_settings).setTitle(getString(R.string.menu_settings));
         menu.findItem(R.id.about_app).setVisible(!isItemClicked);
+        menu.findItem(R.id.about_app).setTitle(getString(R.string.menu_aboutApp));
+
 
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         if (currentFragment instanceof CalendarFragment) {
@@ -339,8 +350,10 @@ public class WelcomeActivity extends AppCompatActivity  {
         super.onResume();
 
         LanguageHelper.applyLanguage(this);
+        if (searchBox.getVisibility() == View.VISIBLE)
+            searchBox.setVisibility(View.GONE);
         getSupportActionBar().setTitle(getString(R.string.app_name));
-        searchBox.setText(getString(R.string.search_activities));
+        searchBox.setHint(getString(R.string.search_activities));
         Menu menu = navigationView.getMenu();
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
@@ -354,6 +367,7 @@ public class WelcomeActivity extends AppCompatActivity  {
                 // Add more items as needed
             }
         }
+
 
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
@@ -369,6 +383,7 @@ public class WelcomeActivity extends AppCompatActivity  {
                     break;
             }
         }
+
 
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);

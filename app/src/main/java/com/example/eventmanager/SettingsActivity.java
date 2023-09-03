@@ -76,7 +76,6 @@ public class SettingsActivity extends AppCompatActivity {
             // set the selected value of the spinner
             notificationDropdown.setSelection(selectedPosition);
         }
-        System.out.println("pozicija: "+selectedPosition);
 
         // Set up language spinner
         ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(this,
@@ -326,6 +325,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LanguageHelper.applyLanguage(this);
+        getSupportActionBar().setTitle(getString(R.string.settings));
+        notificationSwitch.setText(getString(R.string.settings_notifications));
+    }
 }

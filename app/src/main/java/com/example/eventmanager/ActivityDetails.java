@@ -113,17 +113,17 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
                 return false;
             case R.id.app_delete:
              AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                builder.setTitle("Confirm Delete");
-                builder.setMessage("Are you sure you want to delete this activity?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setTitle(getString(R.string.delete_activity_toast_title));
+                builder.setMessage(getString(R.string.delete_activity_toast));
+                builder.setPositiveButton(getString(R.string.delete_activity_toast_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                        dbHelper.deleteActivity(dbHelper.getActivityId(activity.getType(),activity.getName(),activity.getTime(),activity.getDescription(),activity.getCity(),activity.getDate()));
-                        Toast.makeText(getContext(),"Successfully deleted "+activity.getName(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),getString(R.string.delete_activity_toast_confirmation)+" "+activity.getName(),Toast.LENGTH_SHORT).show();
                        getActivity().onBackPressed();
                     }
                 });
-                builder.setNegativeButton("No", null);
+                builder.setNegativeButton(getString(R.string.delete_activity_toast_no), null);
                 builder.show();
                 return true;
 
@@ -149,12 +149,12 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
             LatLng defaultLocation = new LatLng(0, 0);
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(defaultLocation)
-                    .title("City Not Found")
+                    .title(getString(R.string.location_city_not_found))
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)); // Use a red marker icon
 
             googleMap.addMarker(markerOptions);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 7f));
-            Toast.makeText(getContext(), "City not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.location_city_not_found, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -162,6 +162,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
     @Override
     public void onResume() {
         super.onResume();
+        LanguageHelper.applyLanguage(this.getContext());
         if(mapView!=null)
             mapView.onResume();
     }
@@ -186,6 +187,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
         if(mapView!=null)
         mapView.onSaveInstanceState(outState);
     }
+
 
 
 }

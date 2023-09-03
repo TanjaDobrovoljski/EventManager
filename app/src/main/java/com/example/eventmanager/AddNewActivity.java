@@ -99,4 +99,5 @@ public class AddNewActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.add_new_activity));
     }
 
+
 }
