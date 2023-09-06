@@ -100,6 +100,50 @@ public class FreeTimeFragment extends Fragment {
     }
 
 
+    public Bitmap getImageBitMap1() {
+        return imageBitMap1;
+    }
+
+    public void setImageBitMap1(Bitmap imageBitMap1) {
+        this.imageBitMap1 = imageBitMap1;
+    }
+
+    public Bitmap getImageBitMap2() {
+        return imageBitMap2;
+    }
+
+    public void setImageBitMap2(Bitmap imageBitMap2) {
+        this.imageBitMap2 = imageBitMap2;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSelectedDate() {
+        return selectedDate;
+    }
+
+    public void setSelectedDate(String selectedDate) {
+        this.selectedDate = selectedDate;
+    }
+
+    public String getSelectedTime() {
+        return selectedTime;
+    }
+
+    public void setSelectedTime(String selectedTime) {
+        this.selectedTime = selectedTime;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_free_time, container, false);
@@ -205,8 +249,10 @@ public class FreeTimeFragment extends Fragment {
 
                   if( dbHelper.insertActivity("FREE",name,selectedTime,description,location,selectedDate,imageBitMap1,imageBitMap2,ContextCompat.getColor(getContext(), R.color.primary_triadic_one))) {
                       Toast.makeText(view.getContext(), getString(R.string.add_new_activity_toast), Toast.LENGTH_SHORT).show();
-                     if(view.getContext() instanceof AddNewActivity)
+                     if(view.getContext() instanceof AddNewActivity) {
                          ((AddNewActivity) view.getContext()).getActivityA().getListFragment().refreshList();
+
+                     }
                       goBackToPreviousActivity();
 
                   }
@@ -297,9 +343,7 @@ public class FreeTimeFragment extends Fragment {
 
     private void updateHourSpinner(boolean isToday) {
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-
-
-
+        int currentMin=Calendar.getInstance().get(Calendar.MINUTE);
 
         if (isToday) {
             List<String> hours = new ArrayList<>();
@@ -316,7 +360,7 @@ public class FreeTimeFragment extends Fragment {
             hourSpinner.setAdapter(hourAdapter);
 
             List<String> minutes = new ArrayList<>();
-            for (int i = 0; i <= 59; i++) {
+            for (int i = currentMin+2; i <= 59; i++) {
                 minutes.add(String.format("%02d", i));
             }
             ArrayAdapter<String> minuteAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, minutes);
@@ -346,11 +390,7 @@ public class FreeTimeFragment extends Fragment {
         }
     }
 
-    public void showTimeDropdown(View view) {
-        // Display the time dropdown when the time EditText is clicked
-        hourSpinner.performClick();
-        minuteSpinner.performClick();
-    }
+
 
     public boolean isFormValid() {
          name = nameEditText.getText().toString().trim();
@@ -379,8 +419,7 @@ public class FreeTimeFragment extends Fragment {
         month = month + 1;
         selectedDate = formatDateToDB(year, month, dayOfMonth);
         }
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime)
-                 || TextUtils.isEmpty(location)) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime)) {
             return false; // At least one field is empty
         }
 
@@ -440,18 +479,13 @@ public class FreeTimeFragment extends Fragment {
                     }
                 }
             } else if (requestCode == CAMERA_REQ_CODE) {
-                if (currentImage == 1) {
-                    // Get the captured image from the intent data
-                    Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
+                Bundle extras = data.getExtras();
+                Bitmap capturedImage = (Bitmap) extras.get("data");
 
-                    // Set the image to the ImageView
+                if (currentImage == 1) {
                     imageBitMap1 = capturedImage;
                     image1.setImageBitmap(imageBitMap1);
                 } else if (currentImage == 2) {
-                    // Get the captured image from the intent data
-                    Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
-
-                    // Set the image to the ImageView
                     imageBitMap2 = capturedImage;
                     image2.setImageBitmap(imageBitMap2);
                 }

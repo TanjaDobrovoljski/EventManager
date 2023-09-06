@@ -66,6 +66,8 @@ public class ListFragment extends Fragment {
                 welcomeActivity.setSearchBoxVisibility(false);
 
 
+
+
                 bundle.putParcelable("activity", activity);
 
                 bundle.putString("fragmentType", "FreeTimeFragment");

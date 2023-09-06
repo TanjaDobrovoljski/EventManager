@@ -26,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ActivityDetails extends Fragment implements OnMapReadyCallback {
 
@@ -51,6 +52,14 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
 
         dbHelperCity=new DBHelperCity(getContext());
         dbHelper=new DBHelper(getContext());
+        WelcomeActivity w=(WelcomeActivity) requireActivity();
+        BottomNavigationView navigationView = w.findViewById(R.id.navigationView);
+        if(navigationView.getVisibility()==View.VISIBLE)
+            navigationView.setVisibility(View.GONE);
+        if(w.findViewById(R.id.fab).getVisibility()==View.VISIBLE) {
+            (w.findViewById(R.id.fab)).setVisibility(View.GONE);
+        }
+
 
         setHasOptionsMenu(true);
         // Retrieve the clicked activity from the arguments
@@ -81,7 +90,9 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
                 {
                     image1=view.findViewById(R.id.image1);
                     image2=view.findViewById(R.id.image2);
+                    if(activity.getImage1()!=null)
                     image1.setImageBitmap(activity.getImage1());
+                    if(activity.getImage2()!=null)
                     image2.setImageBitmap(activity.getImage2());
                 }
 
@@ -110,7 +121,16 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
         switch (item.getItemId()) {
 
             case R.id.app_edit:
-                return false;
+                EditingFragment editingFragment = new EditingFragment(activity, dbHelper);
+
+
+                // Replace the current fragment with the editing fragment
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.nav_host_fragment, editingFragment)
+                        .addToBackStack(null) // Optional: Add the transaction to the back stack
+                        .commit();
+
+                return true;
             case R.id.app_delete:
              AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(getString(R.string.delete_activity_toast_title));
@@ -165,6 +185,14 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
         LanguageHelper.applyLanguage(this.getContext());
         if(mapView!=null)
             mapView.onResume();
+
+        WelcomeActivity w=(WelcomeActivity) requireActivity();
+        BottomNavigationView navigationView = w.findViewById(R.id.navigationView);
+        if(navigationView.getVisibility()==View.VISIBLE)
+            navigationView.setVisibility(View.GONE);
+        if(w.findViewById(R.id.fab).getVisibility()==View.VISIBLE) {
+            (w.findViewById(R.id.fab)).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -172,6 +200,14 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
         super.onPause();
         if(mapView!=null)
         mapView.onPause();
+
+        WelcomeActivity w=(WelcomeActivity) requireActivity();
+        BottomNavigationView navigationView = w.findViewById(R.id.navigationView);
+        if(navigationView.getVisibility()==View.GONE)
+            navigationView.setVisibility(View.VISIBLE);
+        if(w.findViewById(R.id.fab).getVisibility()==View.GONE) {
+            (w.findViewById(R.id.fab)).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -179,6 +215,14 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
         super.onDestroy();
         if(mapView!=null)
         mapView.onDestroy();
+
+        WelcomeActivity w=(WelcomeActivity) requireActivity();
+        BottomNavigationView navigationView = w.findViewById(R.id.navigationView);
+        if(navigationView.getVisibility()==View.GONE)
+            navigationView.setVisibility(View.VISIBLE);
+        if(w.findViewById(R.id.fab).getVisibility()==View.GONE) {
+            (w.findViewById(R.id.fab)).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

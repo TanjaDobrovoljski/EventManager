@@ -8,16 +8,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
 import android.widget.CalendarView;
+import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +32,9 @@ public class CalendarFragment extends Fragment {
     private MaterialCalendarView calendarView;
 
     private DBHelper dbHelper;
+    private RecyclerView list;
+    private ActivityAdapter adapter;
+    private List<Activity> allActivities;
     public CalendarFragment(DBHelper dbHelper) {
         this.dbHelper=dbHelper;
     }
@@ -34,10 +44,12 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         calendarView = view.findViewById(R.id.calendarView);
-
+        list=view.findViewById(R.id.activityListView);
 
 
         List<Activity> activities = dbHelper.getAllActivities();
+
+
         // Add your logic to update the UI with the activities for the selected date
 
         for (Activity a:activities
@@ -47,8 +59,60 @@ public class CalendarFragment extends Fragment {
 
             // Add more events as needed
         }
+        adapter = new ActivityAdapter(new ArrayList<>());
+        list.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        list.setAdapter(adapter);
+
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(
+                    @NonNull MaterialCalendarView widget,
+                    @NonNull CalendarDay date,
+                    boolean selected
+            ) {
+
+                List<Activity> selectedActivities = dbHelper.getActivitiesForDate(calendarDayToDate(date));
+
+                adapter.setActivities(selectedActivities);
+                if (selectedActivities.isEmpty()) {
+                    list.setVisibility(View.GONE);
+                } else {
+                    list.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+        adapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Activity activity) {
+                // Open NewsArticleFragment on item click
+                ActivityDetails detailsArticleFragment = new ActivityDetails();
+                Bundle bundle = new Bundle();
+
+                WelcomeActivity welcomeActivity = (WelcomeActivity) requireActivity();
+                welcomeActivity.setItemClicked(true);
+                welcomeActivity.setSearchBoxVisibility(false);
+
+
+                bundle.putParcelable("activity", activity);
+
+                bundle.putString("fragmentType", "FreeTimeFragment");
+
+                detailsArticleFragment.setArguments(bundle);
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment, detailsArticleFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+
         return view;
     }
+
 
 
 /*
@@ -111,6 +175,15 @@ public class CalendarFragment extends Fragment {
         public void decorate(DayViewFacade view) {
             view.addSpan(new DotSpan(20, color));
         }
+    }
+
+    public String calendarDayToDate(CalendarDay calendarDay) {
+        int year = calendarDay.getYear();
+        int month = calendarDay.getMonth() + 1; // Note: CalendarDay uses zero-based months
+        int day = calendarDay.getDay();
+
+        // Format the date as "yyyy-MM-dd"
+        return String.format("%04d-%02d-%02d", year, month, day);
     }
 
 

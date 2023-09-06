@@ -132,6 +132,8 @@ public class WelcomeActivity extends AppCompatActivity  {
         fab=findViewById(R.id.fab);
         FloatingActionButton fab = findViewById(R.id.fab);
 
+        if(fab.getVisibility()==View.GONE)
+            fab.setVisibility(View.VISIBLE);
 
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +172,8 @@ public class WelcomeActivity extends AppCompatActivity  {
 
 
         navigationView=findViewById(R.id.navigationView);
+        if(navigationView.getVisibility()==View.GONE)
+            navigationView.setVisibility(View.VISIBLE);
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
             @Override

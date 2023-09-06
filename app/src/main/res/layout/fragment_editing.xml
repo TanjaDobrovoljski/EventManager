@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    style="@style/CustomListItemStyle">
 
     <EditText
-        android:id="@+id/nameEditText"
+        android:id="@+id/activity_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/add_activity_title" />
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,27 +43,26 @@
 
     </LinearLayout>
 
-
-
-    <CalendarView
+       <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/CustomCalendarView"
         style="@style/CustomListItemStyle" />
 
+
     <EditText
-        android:id="@+id/descriptionEditText"
+        android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/add_activity_description" />
+        android:textSize="16sp"
+        />
 
     <AutoCompleteTextView
         android:id="@+id/locationAutoCompleteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/add_activity_location" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -92,12 +87,30 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonAdd"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_add"
-        android:layout_gravity="center"/>
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonCancel"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/margin_separator"/>
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonSave"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_separator"/>
+
+    </LinearLayout>
 
 </LinearLayout>
-</ScrollView>
+
+

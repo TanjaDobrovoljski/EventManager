@@ -43,6 +43,10 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
         this.activityList = activityList;
 
     }
+    public void setActivities(List<Activity> activities) {
+        this.activityList = activities;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

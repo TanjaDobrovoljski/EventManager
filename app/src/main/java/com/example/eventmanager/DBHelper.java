@@ -193,13 +193,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateActivity (Integer id,String type, String name, String time, String description,City city,String date) {
+    public boolean updateActivity (Integer id,String type, String name, String time, String description,String city,String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
         contentValues.put("time", time);
         contentValues.put("description", description);
-        contentValues.put("location", city.getName());
+        contentValues.put("city", city);
         contentValues.put("date", date);
         contentValues.put("type", type);
 
@@ -255,7 +255,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<Activity> activityList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + ACTIVITY_TABLE_NAME + " ORDER BY date ASC", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ACTIVITY_TABLE_NAME + " ORDER BY date ASC, time ASC", null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -496,6 +496,67 @@ public class DBHelper extends SQLiteOpenHelper {
         return activities;
     }
 
+    @SuppressLint("Range")
+    public ArrayList<Activity> getActivitiesForDate(String date2) {
+        ArrayList<Activity> activities = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
 
+        // Define the date range for the query
+
+
+        // Define the format for dates in the "yyyy-M-dd" format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            // Parse the start and end dates and format them in "yyyy-M-dd" format
+            Date startDateObject = dateFormat.parse(date2);
+
+            date2 = dateFormat.format(startDateObject);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Define the query to retrieve activities within the specified date range
+        String query = "SELECT * FROM " + ACTIVITY_TABLE_NAME +
+                " WHERE date =? ORDER BY time ASC";
+
+
+        Cursor cursor = db.rawQuery(query, new String[]{date2});
+
+        // Check if the cursor has any data
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                String description = cursor.getString(cursor.getColumnIndex("description"));
+                String city = cursor.getString(cursor.getColumnIndex("city"));
+                String date = cursor.getString(cursor.getColumnIndex("date"));
+
+                // Retrieve the image1 and image2 byte arrays
+                byte[] image1ByteArray = cursor.getBlob(cursor.getColumnIndex("image1"));
+                byte[] image2ByteArray = cursor.getBlob(cursor.getColumnIndex("image2"));
+
+                // Convert the byte arrays to Bitmaps
+                Bitmap image1 = BitmapFactory.decodeByteArray(image1ByteArray, 0, image1ByteArray.length);
+                Bitmap image2 = BitmapFactory.decodeByteArray(image2ByteArray, 0, image2ByteArray.length);
+
+                int color = cursor.getInt(cursor.getColumnIndex("color"));
+
+                // Create an Activity object and add it to the activityList
+                Activity activity = new Activity(id, type, name, time, description, city, date, image1, image2, color);
+                activities.add(activity);
+            } while (cursor.moveToNext());
+        }
+
+        // Close the cursor and database connection
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+
+        return activities;
+    }
 
 }

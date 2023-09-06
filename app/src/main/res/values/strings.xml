@@ -52,4 +52,10 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
 
+
+    <string name="buttonSave">SAVE</string>
+    <string name="buttonCancel">CANCEL</string>
+
+    <string name="edit_activity_toast">Successfully edited activity!</string>
+
 </resources>

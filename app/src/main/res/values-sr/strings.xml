@@ -64,4 +64,9 @@
     <string name="camera">Kamera</string>
     <string name="gallery">Galerija</string>
 
+    <string name="buttonSave">Sacuvaj</string>
+    <string name="buttonCancel">Ponisti</string>
+
+    <string name="edit_activity_toast">Uspijesno izmijenjena aktivnost!</string>
+
 </resources>

@@ -162,6 +162,7 @@ public class WorkFragment extends Fragment {
 
     private void updateHourSpinner(boolean isToday) {
         int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int currentMin=Calendar.getInstance().get(Calendar.MINUTE);
 
         if (isToday) {
             List<String> hours = new ArrayList<>();
@@ -178,7 +179,7 @@ public class WorkFragment extends Fragment {
             hourSpinner.setAdapter(hourAdapter);
 
             List<String> minutes = new ArrayList<>();
-            for (int i = 0; i <= 59; i++) {
+            for (int i = currentMin+2; i <= 59; i++) {
                 minutes.add(String.format("%02d", i));
             }
             ArrayAdapter<String> minuteAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, minutes);
@@ -244,8 +245,7 @@ public class WorkFragment extends Fragment {
         }
 
 
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime)
-             || TextUtils.isEmpty(location)) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime)) {
             return false; // At least one field is empty
         }
 
