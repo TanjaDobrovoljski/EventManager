@@ -198,28 +198,33 @@ public class WelcomeActivity extends AppCompatActivity  {
     private void filterList(String query) {
         List<Activity> filteredList = new ArrayList<>();
         for (Activity activity : allActivities) {
-            // Implement your filtering logic here
             if (activity.getName().toLowerCase().contains(query.toLowerCase())) {
                 filteredList.add(activity);
             }
         }
 
-        // Update the adapter with the filtered list
+        if (filteredList.isEmpty()) {
+            // Perform partial search on activity names
+            for (Activity activity : allActivities) {
+                String[] activityNameParts = activity.getName().toLowerCase().split(" ");
+                for (String part : activityNameParts) {
+                    if (part.contains(query.toLowerCase())) {
+                        filteredList.add(activity);
+
+                    }
+                }
+            }
+        }
+
         adapter.clear();
         adapter.addAll(filteredList);
         adapter.notifyDataSetChanged();
 
         if (!filteredList.isEmpty()) {
-           // Activity matchedActivity = filteredList.get(0); // Assuming you want to show the first matched activity
-
-            // Get a reference to the TextView
-
             listFragment = new ListFragment(filteredList);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment, listFragment)
                     .commit();
-
-
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.eventmanager;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -167,11 +168,17 @@ public class FreeTimeFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
                             // Open gallery
-                            Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-                            currentImage = 1;
-                            galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            if(ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+                                currentImage = 1;
+                                galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                            startActivityForResult(galleryIntent, GALLERY_REQ_CODE);
+                                startActivityForResult(galleryIntent, GALLERY_REQ_CODE);
+                            }
+                            else {
+                                // Request the gallery permission
+                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_REQ_CODE);
+                            }
                         } else if(which==1){
                             // Open camera
 
@@ -206,11 +213,17 @@ public class FreeTimeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
-                            // Open gallery
-                            Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-                            currentImage = 2;
-                            galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(galleryIntent, GALLERY_REQ_CODE);
+                            if(ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+                                currentImage = 1;
+                                galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                                startActivityForResult(galleryIntent, GALLERY_REQ_CODE);
+                            }
+                            else {
+                                // Request the gallery permission
+                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_REQ_CODE);
+                            }
                         } else if(which==1){
                             // Open camera
 
@@ -332,11 +345,10 @@ public class FreeTimeFragment extends Fragment {
     }
 
     private String formatDateToDB(int year, int month, int dayOfMonth) {
-        // Ensure that the month and day are formatted with leading zeros if needed
+
         String formattedMonth = (month < 10) ? "0" + month : String.valueOf(month);
         String formattedDay = (dayOfMonth < 10) ? "0" + dayOfMonth : String.valueOf(dayOfMonth);
 
-        // Combine the formatted components to get the final "yyyy-MM-dd" format
         return year + "-" + formattedMonth + "-" + formattedDay;
     }
 
@@ -394,12 +406,11 @@ public class FreeTimeFragment extends Fragment {
 
     public boolean isFormValid() {
          name = nameEditText.getText().toString().trim();
-
-       
          description = descriptionEditText.getText().toString().trim();
          location =  locationAutoCompleteTextView.getText().toString().trim();
          selectedHour = "";
          selectedMinute = "";
+
         if (hourSpinner.getSelectedItem() != null) {
             selectedHour = hourSpinner.getSelectedItem().toString();
             selectedTime = selectedHour + ":";
@@ -409,17 +420,18 @@ public class FreeTimeFragment extends Fragment {
             selectedMinute = minuteSpinner.getSelectedItem().toString();
             selectedTime+= selectedMinute;
         }
+
         if("".equals(selectedDate))
         {
             Calendar currentDate = Calendar.getInstance();
             int year = currentDate.get(Calendar.YEAR);
             int month = currentDate.get(Calendar.MONTH);
             int dayOfMonth = currentDate.get(Calendar.DAY_OF_MONTH);
-        // Retrieve the selected date
         month = month + 1;
         selectedDate = formatDateToDB(year, month, dayOfMonth);
         }
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime)) {
+
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime) || TextUtils.isEmpty(description) || TextUtils.isEmpty(location)) {
             return false; // At least one field is empty
         }
 
@@ -454,7 +466,6 @@ public class FreeTimeFragment extends Fragment {
         if (resultCode == RESULT_OK) {
             if (requestCode == GALLERY_REQ_CODE) {
                 Uri selectedImageUri = data.getData();
-
 
                 if (selectedImageUri != null) {
 

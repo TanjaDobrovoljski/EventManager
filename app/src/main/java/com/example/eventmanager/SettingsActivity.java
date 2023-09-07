@@ -63,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(this);
 
       //  SharedPreferences preferences = getSharedPreferences("save", MODE_PRIVATE);
-        boolean isNotificationSwitchChecked = preferences.getBoolean("value", false);
+        boolean isNotificationSwitchChecked = sh.getBoolean("value", false);
 
         // Set the state of the notification switch
         notificationSwitch.setChecked(isNotificationSwitchChecked);
@@ -71,8 +71,8 @@ public class SettingsActivity extends AppCompatActivity {
 
 
 
-        int selectedPosition = preferences.getInt("selectedPosition", -1);
-        if(selectedPosition != -1) {
+        int selectedPosition = preferences.getInt("selectedPosition", 0);
+        if(selectedPosition != 0) {
             // set the selected value of the spinner
             notificationDropdown.setSelection(selectedPosition);
         }
@@ -128,12 +128,13 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            saveNotificationSwitchState(isChecked);
             if (isChecked) {
                 notificationDropdown.setVisibility(View.VISIBLE);
             } else {
                 notificationDropdown.setVisibility(View.GONE);
             }
-            saveNotificationSwitchState(isChecked);
+
         });
 
      /*  notificationDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -274,11 +275,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { //Android 8.0 or higher
 
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My notification", importance);
-            channel.setDescription("neki opis,nesto");
+            //channel.setDescription("neki opis,nesto");
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }

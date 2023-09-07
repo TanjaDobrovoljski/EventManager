@@ -52,8 +52,9 @@ public class AddNewActivity extends AppCompatActivity {
         int fragmentId = getIntent().getIntExtra("fragmentId", 0);
         dbHelper=new DBHelper(this);
         dbHelperCity=new DBHelperCity(this);
-        // Determine which fragment to display based on the fragment ID
+
         Fragment fragment = null;
+
         switch (fragmentId) {
             case 1:
                 fragment = new FreeTimeFragment(dbHelper);
@@ -65,13 +66,9 @@ public class AddNewActivity extends AppCompatActivity {
                fragment=new TravelFragment(dbHelper,dbHelperCity);
 
                 break;
-            default:
-                // Default to a fallback fragment or handle the case as desired
-               // fragment = new Fragment1();
-                break;
         }
 
-        // Replace the container with the selected fragment
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment, fragment)
                 .commit();

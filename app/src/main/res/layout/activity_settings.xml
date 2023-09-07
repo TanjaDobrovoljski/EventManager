@@ -26,10 +26,7 @@
         style="@style/CustomListItemStyle"
         android:layout_marginBottom="@dimen/margin_separator" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
+
 
     <Switch
         android:layout_width="match_parent"
@@ -51,9 +48,6 @@
         style="@style/CustomListItemStyle"
         android:layout_marginBottom="@dimen/margin_separator" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
+
 
 </LinearLayout>

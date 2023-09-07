@@ -60,21 +60,24 @@ public class NotificationService extends Service {
         // Get the user's notification preference
         int selectedPosition = getNotificationSelectedPosition();
 
-        if (selectedPosition > 0) {
+        if (selectedPosition > -1) {
             // Get the number of days before the event for notification
             int daysBefore = getDaysBefore(selectedPosition);
 
-            // Calculate the date for notification based on the preference
+            List<Activity> activities=null;
             Calendar notificationDate = (Calendar) currentDate.clone();
-            notificationDate.add(Calendar.DAY_OF_MONTH, daysBefore);
+            if (selectedPosition == 1) {
+                notificationDate.add(Calendar.HOUR_OF_DAY, -1);
+                activities=dbHelper.getActivitiesForNextHour(formatDate(currentDate));
+            }
+            else {
+                notificationDate.add(Calendar.DAY_OF_MONTH, daysBefore);
+                 activities = dbHelper.getActivitiesForDateRange(
+                        formatDate(currentDate),
+                        Integer.parseInt(formatDate(notificationDate))
+                );
+            }
 
-            // Retrieve activities that match the notification criteria
-            List<Activity> activities = dbHelper.getActivitiesForDateRange(
-                    formatDate(currentDate),
-                    Integer.parseInt(formatDate(notificationDate))
-            );
-
-            // Send a broadcast to update the upcoming notifications
             Intent intent = new Intent("com.example.eventmanager.UPCOMING_NOTIFICATIONS");
             intent.putExtra("activities", new ArrayList<>(activities));
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
@@ -83,7 +86,7 @@ public class NotificationService extends Service {
 
     private int getNotificationSelectedPosition() {
         SharedPreferences preferences = getSharedPreferences("save", MODE_PRIVATE);
-        return preferences.getInt("selectedPosition", 0);
+        return preferences.getInt("selectedPosition", -1);
     }
 
     private int getDaysBefore(int selectedPosition) {

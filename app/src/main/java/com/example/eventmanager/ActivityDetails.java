@@ -52,6 +52,7 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
 
         dbHelperCity=new DBHelperCity(getContext());
         dbHelper=new DBHelper(getContext());
+
         WelcomeActivity w=(WelcomeActivity) requireActivity();
         BottomNavigationView navigationView = w.findViewById(R.id.navigationView);
         if(navigationView.getVisibility()==View.VISIBLE)
@@ -60,28 +61,27 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
             (w.findViewById(R.id.fab)).setVisibility(View.GONE);
         }
 
-
         setHasOptionsMenu(true);
-        // Retrieve the clicked activity from the arguments
+
         Bundle arguments = getArguments();
         if (arguments != null) {
            activity = arguments.getParcelable("activity");
             if (activity != null) {
-                // Update the UI with the details of the clicked activity
+
                  nameTextView = view.findViewById(R.id.activity_title);
                  descriptionTextView = view.findViewById(R.id.description);
                  dateActivity=view.findViewById(R.id.dateActivity);
                  timeActivity=view.findViewById(R.id.timeActivity);
                 mapView = view.findViewById(R.id.mapView);
+
                 if ("TRAVEL".equals(activity.getType())) {
-                    // If the type is "TRAVEL," show the MapView and its related views
                     mapView.setVisibility(View.VISIBLE);
                     mapView.onCreate(savedInstanceState);
                     mapView.getMapAsync(this);
                     location = activity.getCity();
                 }
                 else {
-                    // If the type is not "TRAVEL," hide the MapView and its related views
+
                     mapView.setVisibility(View.GONE);
                     mapView=null;
                 }
@@ -96,13 +96,12 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
                     image2.setImageBitmap(activity.getImage2());
                 }
 
-
                 nameTextView.setText(activity.getName());
                 descriptionTextView.setText(activity.getDescription());
                 dateActivity.setText(activity.getDate());
                 timeActivity.setText(activity.getTime());
                 location=activity.getCity();
-                // Set other text views with the respective details
+
             }
         }
 
@@ -123,11 +122,9 @@ public class ActivityDetails extends Fragment implements OnMapReadyCallback {
             case R.id.app_edit:
                 EditingFragment editingFragment = new EditingFragment(activity, dbHelper);
 
-
-                // Replace the current fragment with the editing fragment
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.nav_host_fragment, editingFragment)
-                        .addToBackStack(null) // Optional: Add the transaction to the back stack
+                        .addToBackStack(null)
                         .commit();
 
                 return true;

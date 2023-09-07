@@ -245,7 +245,7 @@ public class WorkFragment extends Fragment {
         }
 
 
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime)) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(selectedTime) || TextUtils.isEmpty(description) || TextUtils.isEmpty(location)) {
             return false; // At least one field is empty
         }
 

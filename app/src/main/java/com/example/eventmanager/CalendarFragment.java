@@ -43,21 +43,15 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
+
         calendarView = view.findViewById(R.id.calendarView);
         list=view.findViewById(R.id.activityListView);
 
-
         List<Activity> activities = dbHelper.getAllActivities();
-
-
-        // Add your logic to update the UI with the activities for the selected date
 
         for (Activity a:activities
         ) {
-            // Add events to the CalendarView
             addEventToCalendar(a.getDate(),a.getColor());
-
-            // Add more events as needed
         }
         adapter = new ActivityAdapter(new ArrayList<>());
         list.setLayoutManager(new LinearLayoutManager(getActivity()));

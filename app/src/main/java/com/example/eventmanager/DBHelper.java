@@ -42,8 +42,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ACTIVITY_COLUMN_IMAGE2 = "image2";
     public static final String ACTIVITY_COLUMN_COLOR = "color";
 
-
-    private HashMap hp;
     private Context ctx;
 
     public DBHelper(Context context) {
@@ -193,7 +191,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateActivity (Integer id,String type, String name, String time, String description,String city,String date) {
+    public boolean updateActivity (Integer id,String type, String name, String time, String description,String city,String date,Bitmap image1, Bitmap image2) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", name);
@@ -202,6 +200,21 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("city", city);
         contentValues.put("date", date);
         contentValues.put("type", type);
+
+        if (image1 != null) {
+            byte[] image1ByteArray = getBitmapAsByteArray(image1);
+            contentValues.put("image1", image1ByteArray);
+        } else {
+            contentValues.put("image1", new byte[0]);
+        }
+
+        // Convert image2 Bitmap to byte array and insert into the database
+        if (image2 != null) {
+            byte[] image2ByteArray = getBitmapAsByteArray(image2);
+            contentValues.put("image2", image2ByteArray);
+        } else {
+            contentValues.put("image2", new byte[0]);
+        }
 
         db.update(ACTIVITY_TABLE_NAME, contentValues, "id = ? ", new String[] { Integer.toString(id) } );
         return true;

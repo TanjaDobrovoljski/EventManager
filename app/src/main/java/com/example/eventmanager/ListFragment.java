@@ -32,6 +32,7 @@ public class ListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         recyclerView = view.findViewById(R.id.list_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -40,10 +41,8 @@ public class ListFragment extends Fragment {
         welcomeActivity.setItemClicked(false);
 
         if (filteredActivityList != null) {
-            // If the filtered list is not null, use it as the data source for the adapter
             activityAdapter = new ActivityAdapter(filteredActivityList);
         } else {
-            // Otherwise, use the activities from the dbHelper
             activityList = dbHelper.getAllActivitiesSortedByDate();
             activityAdapter = new ActivityAdapter(activityList, dbHelper);
         }
@@ -64,9 +63,6 @@ public class ListFragment extends Fragment {
                 WelcomeActivity welcomeActivity = (WelcomeActivity) requireActivity();
                 welcomeActivity.setItemClicked(true);
                 welcomeActivity.setSearchBoxVisibility(false);
-
-
-
 
                 bundle.putParcelable("activity", activity);
 
